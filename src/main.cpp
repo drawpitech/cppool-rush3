@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <span>
+#include <modules/MemoryModule.hpp>
 
 void displayHelp() {
     std::cout << "USAGE" << std::endl;
@@ -15,9 +16,21 @@ void displayHelp() {
     std::cout << "\tmyGKrellm is a system monitor." << std::endl;
 }
 
-int main(int argc, char* argv[]) {
+[[noreturn]] int main(int argc, char* argv[]) {
     std::span args{argv, static_cast<std::size_t>(argc)};
 
+    Krell::MemoryModule mem_module("/proc/meminfo");
+    mem_module.update();
 
+    mem_module.getData();
 
+    for (auto& [key, value] : mem_module.getData()) {
+        std::cout << key << ": " << value->toString() << std::endl;
+    }
+
+    while (true) {
+
+    }
+
+    // std::cout << mem_module.getModuleName() << std::endl;
 }

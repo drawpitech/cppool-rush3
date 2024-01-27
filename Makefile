@@ -13,7 +13,7 @@ NAME = MyGKrellm
 
 CXXFLAGS += -Wall -Wextra -std=c++20
 
-CPPFLAGS += -I./include
+CPPFLAGS += -Iquoteinclude
 
 .DEFAULT_GOAL =	all
 
