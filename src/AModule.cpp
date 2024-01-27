@@ -18,7 +18,7 @@ void AModule::update()
     std::ifstream file(_path, std::ios::in);
     std::ostringstream oss;
     oss << file.rdbuf();
-    _stream.str(oss.str());
+    _stream = std::istringstream(oss.str());
 }
 
 void AModule::log() const
