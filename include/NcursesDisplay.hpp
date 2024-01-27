@@ -25,7 +25,7 @@ public:
 
     void update(std::shared_ptr<OrchTable> data) override;
 
-    void render() const override;
+    void render() override;
 
     ~NcursesDisplay() override;
 

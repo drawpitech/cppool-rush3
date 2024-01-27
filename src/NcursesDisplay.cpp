@@ -43,7 +43,7 @@ void NcursesDisplay::update([[maybe_unused]] std::shared_ptr<OrchTable> data)
     }
 }
 
-void NcursesDisplay::render() const
+void NcursesDisplay::render()
 {
     for (const auto module: _windows) {
         wrefresh(module);

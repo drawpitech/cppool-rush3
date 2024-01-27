@@ -21,6 +21,7 @@
 void SFMLDisplay::initialize() {
     window.create(sf::VideoMode(800, 600), "SFML Display");
     window.setTitle("MyGKrellM GTK");
+    window.setFramerateLimit(2);
     if (!font.loadFromFile("./assets/arial.ttf")) {
         exit(1);
     }
@@ -75,7 +76,7 @@ void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data) {
 
         int rectangleHeight = 30 + (std::count(moduleText.begin(), moduleText.end(), '\n') * 15);
 
-        sf::RectangleShape rectangle(sf::Vector2f(200, rectangleHeight));
+        sf::RectangleShape rectangle(sf::Vector2f(500, rectangleHeight));
         rectangle.setPosition(offsetX, offsetY);
         rectangle.setFillColor(sf::Color(200, 200, 200));
         rectangle.setOutlineThickness(2);

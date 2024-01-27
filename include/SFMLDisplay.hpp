@@ -27,3 +27,4 @@ class SFMLDisplay : public Krell::IDisplay {
 };
 
 
+#endif /* !SFMLDISPLAY_HPP_ */
