@@ -11,6 +11,7 @@
 #include "IDisplay.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
+#include "Orchestrator.hpp"
 
 class SFMLDisplay : public Krell::IDisplay {
     sf::RenderWindow window;
@@ -19,11 +20,10 @@ class SFMLDisplay : public Krell::IDisplay {
 
     public:
         void initialize() override;
-        void render() const override;
-        //void searchdata(std::shared_ptr<OrchTable> data)
+        void update(std::shared_ptr<Krell::OrchTable> data) override;
+        void render() override;
+        void mainLogic(Krell::Orchestrator& orchestrator);
         ~SFMLDisplay() override = default;
 };
 
 
-
-#endif /* !SFMLDISPLAY_HPP_ */
