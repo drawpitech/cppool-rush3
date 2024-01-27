@@ -8,9 +8,8 @@
 #pragma once
 
 #include <ncurses.h>
+
 #include <memory>
-#include <set>
-#include <vector>
 
 #include "IDisplay.hpp"
 #include "Orchestrator.hpp"
@@ -18,7 +17,7 @@
 namespace Krell {
 class NCursesDisplay final : public IDisplay
 {
-public:
+   public:
     NCursesDisplay();
 
     bool isRunning() const override;
@@ -29,13 +28,18 @@ public:
 
     ~NCursesDisplay() override;
 
-private:
-    std::vector<WINDOW*> _windows;
-    std::set<std::string> _folded;
+    struct Window
+    {
+        WINDOW* win;
+        bool folded;
+    };
+
+   private:
+    std::map<std::string, Window> _windows;
 
     bool _running{true};
     size_t _selected{0};
 
-    void handleInput(std::vector<std::string> windows);
+    void handleInput();
 };
-}
+}  // namespace Krell
