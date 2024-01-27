@@ -26,6 +26,8 @@ public:
 
     void unsubscribe(const std::string& name) override;
 
+    void log() const override;
+
 private:
     std::shared_ptr<ModuleTab> _data{new ModuleTab};
     static inline const std::string _name{"processor"};

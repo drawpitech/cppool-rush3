@@ -6,9 +6,9 @@
 */
 
 
+#include <iostream>
 #include <pwd.h>
 
-#include <iostream>
 #include "modules/HostnameModule.hpp"
 
 namespace Krell {
@@ -32,12 +32,13 @@ void HostnameModule::update() {
     uid_t uid = geteuid();
     struct passwd* pw = getpwuid(uid);
     if (pw != nullptr)
-        (*_data)["username"] = std::make_unique<StringData>(
-            std::string(pw->pw_name));
+        (*_data)["username"] = std::make_unique<StringData>(std::string(pw->pw_name));
+}
 
-    for (auto& [key, data] : *_data) {
-        std::clog << key << ": " << data->str() << std::endl;
-    }
+void HostnameModule::log() const
+{
+    for (auto& [key, data] : *_data)
+        std::clog << key << ": " << data->str() << "\n";
 }
 
 std::shared_ptr<ModuleTab> HostnameModule::getData() const {

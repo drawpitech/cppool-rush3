@@ -6,6 +6,7 @@
 */
 
 
+#include <iostream>
 #include <ranges>
 #include "Orchestrator.hpp"
 
@@ -19,6 +20,14 @@ void Orchestrator::update() {
     for (const auto& [name, module] : _modules) {
         module->update();
         (*_data)[name] = module->getData();
+    }
+}
+
+void Orchestrator::log() const {
+    for (const auto& [name, module] : _modules) {
+        std::clog << "\nModule `" << name << "`:\n";
+        module->log();
+        std::clog << std::flush;
     }
 }
 

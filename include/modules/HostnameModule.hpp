@@ -27,6 +27,8 @@ public:
 
     void unsubscribe(std::string const& name) override;
 
+    void log() const override;
+
 private:
     std::shared_ptr<ModuleTab> _data{new ModuleTab};
 

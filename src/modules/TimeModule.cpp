@@ -30,10 +30,12 @@ void TimeModule::update()
 
     (*_data)["date"] = std::make_unique<StringData>(date);
     (*_data)["time"] = std::make_unique<StringData>(time);
+}
 
-    for (auto& [key, data] : *_data) {
-        std::clog << key << ": " << data->str() << std::endl;
-    }
+void TimeModule::log() const
+{
+    for (auto& [key, data] : *_data)
+        std::clog << key << ": " << data->str() << "\n";
 }
 
 std::shared_ptr<ModuleTab> TimeModule::getData() const

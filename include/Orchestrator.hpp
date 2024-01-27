@@ -22,6 +22,7 @@ public:
     void addModule(std::unique_ptr<IModule> module);
 
     void update();
+    void log() const;
 
     std::shared_ptr<OrchTable> getData() const;
 

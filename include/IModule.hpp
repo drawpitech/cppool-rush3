@@ -15,6 +15,8 @@ public:
 
     virtual void update() = 0;
 
+    virtual void log() const = 0;
+
     virtual std::shared_ptr<ModuleTab> getData() const = 0;
 
     virtual void subscribe(std::string const& name) = 0;

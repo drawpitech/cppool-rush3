@@ -13,10 +13,10 @@
 
 using options_t = uint16_t;
 
-enum
+enum OPTS
 {
-    OPT_DEBUG_MOD = 1 << 0,
-    OPT_HELP_MESS = 1 << 1,
+    DEBUG_MOD = 1 << 0,
+    HELP_MESS = 1 << 1,
 };
 
 struct opt_t
@@ -27,8 +27,8 @@ struct opt_t
 };
 
 static const std::vector<opt_t> OPTIONS = {{
-    {'h', "help", OPT_HELP_MESS},
-    {'\0', "debug", OPT_DEBUG_MOD},
+    {'h', "help", OPTS::HELP_MESS},
+    {'\0', "debug", OPTS::DEBUG_MOD},
     {'\0', "", 0},
 }};
 

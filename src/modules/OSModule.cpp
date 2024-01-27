@@ -42,10 +42,12 @@ void OSModule::update() {
         std::string kernel = line.substr(0, line.find('('));
         (*_data)["kernel"] = std::make_unique<StringData>(kernel);
     }
+}
 
-    for (auto& [key, data] : *_data) {
-        std::clog << key << ": " << data->str() << std::endl;
-    }
+void OSModule::log() const
+{
+    for (auto& [key, data] : *_data)
+        std::clog << key << ": " << data->str() << "\n";
 }
 
 std::shared_ptr<ModuleTab> OSModule::getData() const {

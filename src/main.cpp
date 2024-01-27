@@ -34,7 +34,7 @@ void addModules(Krell::Orchestrator& orc) {
 [[noreturn]] int main(const int argc, const char* argv[]) {
     options_t options = get_params(argc, argv);
 
-    if ((options & OPT_HELP_MESS) != 0) {
+    if ((options & OPTS::HELP_MESS) != 0) {
         displayHelp();
         exit(0);
     }
@@ -46,6 +46,8 @@ void addModules(Krell::Orchestrator& orc) {
 
     while (true) {
         orchestrator.update();
+        if ((options & OPTS::DEBUG_MOD) != 0)
+            orchestrator.log();
         auto data = orchestrator.getData();
         std::this_thread::sleep_for(interval);
     }

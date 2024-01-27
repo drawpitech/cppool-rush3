@@ -8,6 +8,7 @@
 #include "modules/ProcessorModule.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 namespace Krell {
 ProcessorModule::ProcessorModule(std::string path)
@@ -43,5 +44,11 @@ void ProcessorModule::update() {
         }
         (*_data)[key] = std::make_unique<StringData>(value);
     }
+}
+
+void ProcessorModule::log() const
+{
+    for (auto& [key, data] : *_data)
+        std::clog << key << ": " << data->str() << "\n";
 }
 } // Krell
