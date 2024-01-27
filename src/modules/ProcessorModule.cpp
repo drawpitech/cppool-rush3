@@ -5,16 +5,23 @@
 ** ProcessorModule.cpp
 */
 
-
-#include <iostream>
 #include <sstream>
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 #include "Data.hpp"
 #include "AModule.hpp"
 #include "modules/ProcessorModule.hpp"
 #include "Utils.hpp"
+
+namespace {
+inline const std::unordered_map<std::string, std::string> relevantKeys{
+    {"model name", "Model name"}, {"cpu MHz", "CPU MHz"},
+    {"cache size", "Cache size"}, {"cpu cores", "CPU cores"},
+    {"siblings", "Threads"}, {"vendor_id", "Vendor ID"}
+};
+}
 
 namespace Krell {
 ProcessorModule::ProcessorModule(std::string path)
@@ -58,21 +65,21 @@ void ProcessorModule::update()
             coreName = value;
             continue;
         }
-        if (isCore && key != "cpu MHz")
-            continue;
         if (!isCore && key.empty()) {
             isCore = true;
             continue;
         }
-        if (key == "flags") {
+        if (isCore && key != "cpu MHz") {
             continue;
         }
         if (key == "cpu MHz") {
-            (*_data)[key + ' ' + coreName] = std::make_unique<
+            (*_data)[relevantKeys.at(key) + ' ' + coreName] = std::make_unique<
                 StringData>(value);
             continue;
         }
-        (*_data)[key] = std::make_unique<StringData>(value);
+        if (relevantKeys.contains(key)){
+            (*_data)[relevantKeys.at(key)] = std::make_unique<StringData>(value);
+        }
     }
 }
 } // Krell

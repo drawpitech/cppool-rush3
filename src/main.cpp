@@ -5,6 +5,8 @@
 ** main.cpp
 */
 
+#include <chrono>
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <span>
@@ -38,7 +40,7 @@ void displayHelp()
 
 void addModules(Krell::Orchestrator& orc)
 {
-    // orc.addModule(std::make_unique<Krell::MemoryModule>());
+    orc.addModule(std::make_unique<Krell::MemoryModule>());
     orc.addModule(std::make_unique<Krell::ProcessorModule>());
     orc.addModule(std::make_unique<Krell::OSModule>());
     orc.addModule(std::make_unique<Krell::HostnameModule>());
@@ -64,7 +66,7 @@ std::unique_ptr<Krell::IDisplay> getDisplay(const options_t& options)
     }
 
     Krell::Orchestrator orchestrator;
-    const auto interval = std::chrono::seconds(1);
+    const auto interval = std::chrono::milliseconds(500);
 
     addModules(orchestrator);
 

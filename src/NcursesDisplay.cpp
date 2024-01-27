@@ -30,6 +30,7 @@ void NcursesDisplay::update([[maybe_unused]] std::shared_ptr<OrchTable> data)
     clear();
     _windows.clear();
     int y_off = 0;
+    int x_off = -16;
     for (const auto& [name, module] : *data) {
         WINDOW* win = subwin(stdscr, module->size() + 2, COLS, y_off, 0);
         _windows.push_back(win);
@@ -38,7 +39,7 @@ void NcursesDisplay::update([[maybe_unused]] std::shared_ptr<OrchTable> data)
         int y_loff = 0;
         mvwprintw(win, y_loff++, 2, "%s", name.c_str());
         for (const auto& [key, value] : *module) {
-            mvwprintw(win, y_loff++, 2, "%s: %s", key.c_str(), value->str().c_str());
+            mvwprintw(win, y_loff++, 2, "%*s %*s", x_off ,(key + ":").c_str(), COLS + x_off - 5, value->str().c_str());
         }
     }
 }
