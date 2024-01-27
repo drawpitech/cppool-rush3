@@ -8,28 +8,29 @@
 #pragma once
 
 #include <ncurses.h>
-#include <map>
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "IDisplay.hpp"
+#include "Orchestrator.hpp"
 
 namespace Krell {
-class NcursesDisplay final : public IDisplay
+class NCursesDisplay final : public IDisplay
 {
 public:
-    NcursesDisplay();
+    NCursesDisplay();
 
-    void initialize() override;
+    bool isRunning() const override;
 
     void update(std::shared_ptr<OrchTable> data) override;
 
     void render() override;
 
-    ~NcursesDisplay() override;
+    ~NCursesDisplay() override;
 
 private:
     std::vector<WINDOW*> _windows;
+
+    bool _running{true};
 };
 }

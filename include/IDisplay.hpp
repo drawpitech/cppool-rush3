@@ -16,7 +16,7 @@ class IDisplay
 public:
     virtual ~IDisplay() = default;
 
-    virtual void initialize() = 0;
+    virtual bool isRunning() const = 0;
 
     virtual void update(std::shared_ptr<OrchTable> data) = 0;
 

@@ -9,10 +9,10 @@
 #include <memory>
 
 #include "Orchestrator.hpp"
-#include "NcursesDisplay.hpp"
+#include "NCursesDisplay.hpp"
 
 namespace Krell {
-NcursesDisplay::NcursesDisplay()
+NCursesDisplay::NCursesDisplay()
 {
     initscr();
     cbreak();
@@ -27,11 +27,12 @@ NcursesDisplay::NcursesDisplay()
     keypad(stdscr, TRUE);
 }
 
-void NcursesDisplay::initialize()
+bool NCursesDisplay::isRunning() const
 {
+    return _running;
 }
 
-void NcursesDisplay::update([[maybe_unused]] std::shared_ptr<OrchTable> data)
+void NCursesDisplay::update([[maybe_unused]] std::shared_ptr<OrchTable> data)
 {
     clear();
     _windows.clear();
@@ -61,7 +62,7 @@ void NcursesDisplay::update([[maybe_unused]] std::shared_ptr<OrchTable> data)
     }
 }
 
-void NcursesDisplay::render()
+void NCursesDisplay::render()
 {
     for (const auto module : _windows) {
         wrefresh(module);
@@ -69,7 +70,7 @@ void NcursesDisplay::render()
     // refresh();
 }
 
-NcursesDisplay::~NcursesDisplay()
+NCursesDisplay::~NCursesDisplay()
 {
     endwin();
 }

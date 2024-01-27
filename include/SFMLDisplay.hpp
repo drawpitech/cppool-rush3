@@ -8,22 +8,29 @@
 #ifndef SFMLDISPLAY_HPP_
 #define SFMLDISPLAY_HPP_
 
-#include "IDisplay.hpp"
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics.hpp>
-#include <string>
+#include "IDisplay.hpp"
 #include "Orchestrator.hpp"
 
-class SFMLDisplay : public Krell::IDisplay {
+class SFMLDisplay : public Krell::IDisplay
+{
     sf::RenderWindow window;
     sf::Font font;
     sf::Text text;
 
-    public:
-        void initialize() override;
-        void update(std::shared_ptr<Krell::OrchTable> data) override;
-        void render() override;
-        void mainLogic(Krell::Orchestrator& orchestrator);
-        ~SFMLDisplay() override = default;
+public:
+    SFMLDisplay();
+
+    void update(std::shared_ptr<Krell::OrchTable> data) override;
+
+    bool isRunning() const override;
+
+    void render() override;
+
+    void mainLogic(Krell::Orchestrator& orchestrator);
+
+    ~SFMLDisplay() override = default;
 };
 
 

@@ -16,7 +16,7 @@ add_executable(MyGKrellm
         src/modules/HostnameModule.cpp
         src/modules/OSModule.cpp
         src/Args.cpp
-        src/NcursesDisplay.cpp
+        src/NCursesDisplay.cpp
         src/SFMLDisplay.cpp
         src/modules/TimeModule.cpp
         src/Utils.cpp

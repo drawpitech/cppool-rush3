@@ -14,16 +14,14 @@
 
 #include "modules/ProcessorModule.hpp"
 #include "Args.hpp"
-#include "modules/ProcessorModule.hpp"
 #include "Orchestrator.hpp"
 #include "SFMLDisplay.hpp"
 #include "IDisplay.hpp"
 #include "modules/HostnameModule.hpp"
 #include "modules/MemoryModule.hpp"
 #include "modules/OSModule.hpp"
-#include "modules/ProcessorModule.hpp"
 #include "modules/TimeModule.hpp"
-#include "NcursesDisplay.hpp"
+#include "NCursesDisplay.hpp"
 
 void displayHelp()
 {
@@ -34,10 +32,12 @@ void displayHelp()
     std::cout << "OPTIONS" << std::endl;
     for (const auto& opt : OPTIONS) {
         std::cout << "\t";
-        if (opt.c != '\0')
+        if (opt.c != '\0') {
             std::cout << "-" << opt.c << " ";
-        if (!opt.large.empty())
+        }
+        if (!opt.large.empty()) {
             std::cout << "--" << opt.large << " ";
+        }
         std::cout << ": " << opt.description << "\n" << std::flush;
     }
 }
@@ -54,17 +54,19 @@ void addModules(Krell::Orchestrator& orc)
 std::unique_ptr<Krell::IDisplay> getDisplay(const options_t& options)
 {
     std::clog << "Options: " << options << std::endl;
-    if ((options & OPTS::DEBUG_MOD) != 0)
+    if ((options & OPTS::DEBUG_MOD) != 0) {
         return nullptr;
-    if ((options & OPTS::GRAPHICAL))
+    }
+    if ((options & OPTS::GRAPHICAL) != 0) {
         return std::make_unique<SFMLDisplay>();
-    return std::make_unique<Krell::NcursesDisplay>();
+    }
+    return std::make_unique<Krell::NCursesDisplay>();
 }
 
 int main(const int argc, const char* argv[])
 {
-    SFMLDisplay sfmlDisplay;
     Krell::Orchestrator orchestrator;
+    const auto interval = std::chrono::milliseconds(500);
     const options_t options = get_params(
         std::span{argv, static_cast<std::size_t>(argc)});
 
@@ -73,25 +75,21 @@ int main(const int argc, const char* argv[])
         std::exit(0);
     }
 
-    const auto interval = std::chrono::milliseconds(500);
-
     addModules(orchestrator);
-
     std::unique_ptr<Krell::IDisplay> display = getDisplay(options);
 
-    if (options & OPTS::GRAPHICAL) {
-        sfmlDisplay.initialize();
-        sfmlDisplay.mainLogic(orchestrator);
-    }
-    while (true) {
+    while (display->isRunning()) {
         orchestrator.update();
-        if ((options & OPTS::DEBUG_MOD) != 0)
+
+        if ((options & OPTS::DEBUG_MOD) != 0) {
             orchestrator.log();
+        }
 
         if (display != nullptr) {
             display->update(orchestrator.getData());
             display->render();
         }
+
+        std::this_thread::sleep_for(interval);
     }
 }
-
