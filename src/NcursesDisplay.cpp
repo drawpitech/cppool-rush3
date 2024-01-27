@@ -5,27 +5,50 @@
 ** NcursesDisplay
 */
 
-
-/*#include "IDisplay.hpp"
-#include "NcursesDisplay.hpp"
-#include "modules/MemoryModule.hpp"
 #include <ncurses.h>
-#include <string>
+#include <memory>
 
-    void NcursesDisplay::initialize() {
-        initscr();
-        cbreak();
-        noecho();
-        keypad(stdscr, TRUE);
-    }
+#include "Orchestrator.hpp"
+#include "NcursesDisplay.hpp"
 
-    void NcursesDisplay::render(const std::string &data) {
-        clear();
-        mvprintw(0, 0, data.c_str());
-        refresh();
-    }
+namespace Krell {
+NcursesDisplay::NcursesDisplay()
+{
+    initscr();
+    cbreak();
+    noecho();
+    curs_set(0);
+    keypad(stdscr, TRUE);
+}
 
-    NcursesDisplay::~NcursesDisplay() {
-        endwin();
+void NcursesDisplay::initialize()
+{
+}
+
+void NcursesDisplay::update([[maybe_unused]] std::shared_ptr<OrchTable> data)
+{
+    // clear();
+    _windows.clear();
+    int y = 0;
+    for (const auto& [name, module] : *data) {
+        WINDOW* win = subwin(stdscr, 10, 40, y, 0);
+        _windows.push_back(win);
+        y += 10;
+        box(win, 0, 0);
+        mvwprintw(win, 0, 2, name.c_str());
     }
-*/
+}
+
+void NcursesDisplay::render() const
+{
+    for (const auto module: _windows) {
+        wrefresh(module);
+    }
+    // refresh();
+}
+
+NcursesDisplay::~NcursesDisplay()
+{
+    endwin();
+}
+}

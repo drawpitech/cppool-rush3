@@ -30,6 +30,6 @@ public:
 
 private:
     std::shared_ptr<ModuleTab> _data{new ModuleTab};
-    static inline const std::string _name{"processor"};
+    static inline const std::string _name{"Processor"};
 };
 } // Krell

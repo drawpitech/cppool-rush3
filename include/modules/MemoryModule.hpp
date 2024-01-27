@@ -30,6 +30,6 @@ public:
 
 private:
     std::shared_ptr<ModuleTab> _data{new ModuleTab};
-    static inline const std::string _name{"memory"};
+    static inline const std::string _name{"Memory"};
 };
 }

@@ -5,19 +5,31 @@
 ** NcursesDisplay
 */
 
-/*#ifndef NCURSESDISPLAY_HPP_
-#define NCURSESDISPLAY_HPP_
+#pragma once
+
+#include <ncurses.h>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "IDisplay.hpp"
-#include <string>
 
+namespace Krell {
+class NcursesDisplay final : public IDisplay
+{
+public:
+    NcursesDisplay();
 
-    class NcursesDisplay : public Krell::IDisplay {
-        public:
-            void initialize();
-            void render(const std::string &data);
-            ~NcursesDisplay();
-        };
+    void initialize() override;
 
+    void update(std::shared_ptr<OrchTable> data) override;
 
-#endif /* !NCURSESDISPLAY_HPP_ */
+    void render() const override;
+
+    ~NcursesDisplay() override;
+
+private:
+    std::vector<WINDOW*> _windows;
+};
+}

@@ -5,7 +5,9 @@
 ** main.cpp
 */
 
+#include <NcursesDisplay.hpp>
 #include <iostream>
+#include <memory>
 #include <thread>
 
 #include "modules/ProcessorModule.hpp"
@@ -41,11 +43,11 @@ void addModules(Krell::Orchestrator& orc) {
 }
 
 [[noreturn]] int main(const int argc, const char* argv[]) {
-    options_t options = get_params(argc, argv);
+    const options_t options = get_params(argc, argv);
 
     if ((options & OPTS::HELP_MESS) != 0) {
         displayHelp();
-        exit(0);
+        std::exit(0);
     }
 
     Krell::Orchestrator orchestrator;
@@ -53,11 +55,17 @@ void addModules(Krell::Orchestrator& orc) {
 
     addModules(orchestrator);
 
+    Krell::NcursesDisplay display;
+
     while (true) {
         orchestrator.update();
         if ((options & OPTS::DEBUG_MOD) != 0)
             orchestrator.log();
-        auto data = orchestrator.getData();
+
+        display.update(orchestrator.getData());
+
+        display.render();
+
         std::this_thread::sleep_for(interval);
     }
 }

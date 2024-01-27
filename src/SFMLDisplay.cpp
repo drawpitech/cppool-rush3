@@ -20,23 +20,22 @@
         text.setFillColor(sf::Color::White);
     }
 
-    void SFMLDisplay::render(const std::string& data) {
-        sf::RectangleShape rectangle(sf::Vector2f(120, 50));
-        rectangle.setSize(sf::Vector2f(150, 100));
-        rectangle.setFillColor(sf::Color(100, 250, 50));
-        while (window.isOpen())
-        {
-            sf::Event event;
-            while (window.pollEvent(event))
-            {
-                if (event.type == sf::Event::Closed)
-                    window.close();
-            }
-            text.setString(data);
-            window.clear();
-            window.draw(rectangle);
-            window.draw(text);
-            window.display();
-        }
+    void SFMLDisplay::render() const{
+        // sf::RectangleShape rectangle(sf::Vector2f(120, 50));
+        // rectangle.setSize(sf::Vector2f(150, 100));
+        // rectangle.setFillColor(sf::Color(100, 250, 50));
+        // while (window.isOpen())
+        // {
+        //     sf::Event event;
+        //     while (window.pollEvent(event))
+        //     {
+        //         if (event.type == sf::Event::Closed)
+        //             window.close();
+        //     }
+        //     text.setString(data);
+        //     window.clear();
+        //     window.draw(rectangle);
+        //     window.draw(text);
+        //     window.display();
+        // }
     }
-

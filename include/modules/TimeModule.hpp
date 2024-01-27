@@ -32,6 +32,6 @@ class TimeModule final : public AModule
    private:
     std::shared_ptr<ModuleTab> _data{new ModuleTab};
 
-    static inline std::string _name{"time"};
+    static inline std::string _name{"Time"};
 };
 }  // namespace Krell

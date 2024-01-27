@@ -32,6 +32,6 @@ public:
 private:
     std::shared_ptr<ModuleTab> _data{new ModuleTab};
 
-    static inline std::string _name{"hostname"};
+    static inline std::string _name{"Hostname"};
 };
 } // namespace Krell

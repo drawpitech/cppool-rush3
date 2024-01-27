@@ -19,7 +19,7 @@ class SFMLDisplay : public Krell::IDisplay {
 
     public:
         void initialize() override;
-        void render(const std::string& data) override;
+        void render() const override;
         //void searchdata(std::shared_ptr<OrchTable> data)
         ~SFMLDisplay() override = default;
 };
