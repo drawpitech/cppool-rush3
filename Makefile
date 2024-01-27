@@ -5,7 +5,8 @@
 ## Makefile
 ##
 
-SRC =	src/main.cpp
+SRC =  $(wildcard src/*.cpp)
+SRC += $(wildcard src/*/*.cpp)
 
 OBJ = $(SRC:.cpp=.o)
 
@@ -13,7 +14,7 @@ NAME = MyGKrellm
 
 CXXFLAGS += -Wall -Wextra -std=c++20
 
-CPPFLAGS += -Iquoteinclude
+CPPFLAGS += -iquoteinclude
 
 .DEFAULT_GOAL =	all
 
@@ -28,5 +29,7 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+.NOTPARALLEL: re
 
 .PHONY: all clean fclean re
