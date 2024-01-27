@@ -12,14 +12,18 @@
 #include <span>
 #include <thread>
 
+#include "modules/ProcessorModule.hpp"
 #include "Args.hpp"
-#include "NcursesDisplay.hpp"
+#include "modules/ProcessorModule.hpp"
 #include "Orchestrator.hpp"
+#include "SFMLDisplay.hpp"
+#include "IDisplay.hpp"
 #include "modules/HostnameModule.hpp"
 #include "modules/MemoryModule.hpp"
 #include "modules/OSModule.hpp"
 #include "modules/ProcessorModule.hpp"
 #include "modules/TimeModule.hpp"
+#include "NcursesDisplay.hpp"
 
 void displayHelp()
 {
@@ -85,3 +89,4 @@ std::unique_ptr<Krell::IDisplay> getDisplay(const options_t& options)
         std::this_thread::sleep_for(interval);
     }
 }
+

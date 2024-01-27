@@ -55,16 +55,26 @@ void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data) {
         const auto& moduleName = modulePair.first;
         const auto& moduleTab = modulePair.second;
 
-        std::string moduleText = moduleName + "\n";
-        for (const auto& dataPair : *moduleTab) {
-            moduleText += dataPair.first + ": " + dataPair.second->str() + "\n";
-        }
-
         sf::Text moduleTitle;
         moduleTitle.setFont(font);
         moduleTitle.setCharacterSize(15);
         moduleTitle.setFillColor(sf::Color::Black);
         moduleTitle.setString(moduleName);
+
+        float maxWidth = moduleTitle.getLocalBounds().width;
+
+        std::string moduleText = moduleName + "\n";
+        for (const auto& dataPair : *moduleTab) {
+            std::string currentString = dataPair.first + ": " + dataPair.second->str();
+            moduleText += currentString + "\n";
+
+            sf::Text tempText(currentString, font, 10);
+            float currentWidth = tempText.getLocalBounds().width;
+            if (currentWidth > maxWidth) {
+                maxWidth = currentWidth;
+            }
+        }
+
         moduleTitle.setPosition(offsetX + 5, offsetY + 5);
 
         sf::Text moduleData;
@@ -76,7 +86,7 @@ void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data) {
 
         int rectangleHeight = 30 + (std::count(moduleText.begin(), moduleText.end(), '\n') * 15);
 
-        sf::RectangleShape rectangle(sf::Vector2f(500, rectangleHeight));
+        sf::RectangleShape rectangle(sf::Vector2f(maxWidth + 10, rectangleHeight)); // 10 for padding
         rectangle.setPosition(offsetX, offsetY);
         rectangle.setFillColor(sf::Color(200, 200, 200));
         rectangle.setOutlineThickness(2);
@@ -89,10 +99,11 @@ void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data) {
         offsetY += rectangleHeight + 10;
         if (offsetY + rectangleHeight > window.getSize().y) {
             offsetY = 10;
-            offsetX += 210;
+            offsetX += maxWidth + 20;
         }
     }
 }
+
 
 void SFMLDisplay::render() {
     window.display();
