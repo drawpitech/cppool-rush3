@@ -12,7 +12,7 @@ OBJ = $(SRC:.cpp=.o)
 
 NAME = MyGKrellm
 
-CXXFLAGS += -Wall -Wextra -std=c++20
+CXXFLAGS += -Wall -Wextra -std=c++20 -lsfml-graphics -lsfml-window -lsfml-system -lncurses -g
 
 CPPFLAGS += -iquoteinclude
 

@@ -9,8 +9,13 @@
 
 namespace Krell {
 
-class IDisplay {
+#include <string>
 
-};
+class IDisplay {
+    public:
+        virtual ~IDisplay() = default;
+        virtual void initialize() = 0;
+        virtual void render(const std::string &data) = 0;
+    };
 
 } // Krell
