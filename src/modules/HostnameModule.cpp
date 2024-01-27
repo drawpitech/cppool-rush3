@@ -5,8 +5,6 @@
 ** HostnameModule.cpp
 */
 
-
-#include <iostream>
 #include <string>
 #include <pwd.h>
 
@@ -38,12 +36,6 @@ void HostnameModule::update()
     if (pw != nullptr)
         (*_data)["username"] = std::make_unique<StringData>(
             std::string(pw->pw_name));
-}
-
-void HostnameModule::log() const
-{
-    for (auto& [key, data] : *_data)
-        std::clog << key << ": " << data->str() << "\n";
 }
 
 std::shared_ptr<ModuleTab> HostnameModule::getData() const

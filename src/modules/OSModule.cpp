@@ -7,7 +7,6 @@
 
 #include "modules/OSModule.hpp"
 
-#include <iostream>
 
 namespace Krell {
 OSModule::OSModule(const std::string& file)
@@ -42,12 +41,6 @@ void OSModule::update() {
         std::string kernel = line.substr(0, line.find('('));
         (*_data)["kernel"] = std::make_unique<StringData>(kernel);
     }
-}
-
-void OSModule::log() const
-{
-    for (auto& [key, data] : *_data)
-        std::clog << key << ": " << data->str() << "\n";
 }
 
 std::shared_ptr<ModuleTab> OSModule::getData() const {

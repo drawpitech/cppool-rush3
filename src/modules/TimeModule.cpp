@@ -9,8 +9,6 @@
 
 #include <pwd.h>
 
-#include <iostream>
-
 namespace Krell {
 TimeModule::TimeModule(const std::string& file) : AModule{file} {}
 
@@ -30,12 +28,6 @@ void TimeModule::update()
 
     (*_data)["date"] = std::make_unique<StringData>(date);
     (*_data)["time"] = std::make_unique<StringData>(time);
-}
-
-void TimeModule::log() const
-{
-    for (auto& [key, data] : *_data)
-        std::clog << key << ": " << data->str() << "\n";
 }
 
 std::shared_ptr<ModuleTab> TimeModule::getData() const

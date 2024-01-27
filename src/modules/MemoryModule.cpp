@@ -7,8 +7,6 @@
 
 #include "modules/MemoryModule.hpp"
 
-#include <iostream>
-
 namespace Krell {
 MemoryModule::MemoryModule(const std::string& file)
     : AModule{file} {
@@ -25,12 +23,6 @@ void MemoryModule::update() {
         key.pop_back();
         (*_data)[key] = std::make_unique<StringData>(value);
     }
-}
-
-void MemoryModule::log() const
-{
-    for (auto& [key, data] : *_data)
-        std::clog << key << ": " << data->str() << "\n";
 }
 
 std::shared_ptr<ModuleTab> MemoryModule::getData() const {

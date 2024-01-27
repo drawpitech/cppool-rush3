@@ -17,6 +17,7 @@ public:
     explicit AModule(const std::string& path);
 
     void update() override;
+    void log() const override;
 
 protected:
     std::istringstream _stream;
