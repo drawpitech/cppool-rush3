@@ -12,17 +12,24 @@
 #include "AModule.hpp"
 
 namespace Krell {
-class HostnameModule final : public AModule
-{
-   public:
-    explicit HostnameModule(const std::string &file = "/proc/sys/kernel/hostname");
+class HostnameModule final : public AModule {
+public:
+    explicit HostnameModule(
+        const std::string& file = "/proc/sys/kernel/hostname");
 
     void update() override;
-    DataTab &getData() override;
-    void subscribe(std::string const &name) override;
-    void unsubscribe(std::string const &name) override;
 
-   private:
-    DataTab _data;
+    std::shared_ptr<ModuleTab> getData() const override;
+
+    const std::string& getName() const override;
+
+    void subscribe(std::string const& name) override;
+
+    void unsubscribe(std::string const& name) override;
+
+private:
+    std::shared_ptr<ModuleTab> _data{new ModuleTab};
+
+    static inline std::string _name{"hostname"};
 };
-}  // namespace Krell
+} // namespace Krell

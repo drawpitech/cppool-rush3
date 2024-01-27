@@ -5,17 +5,18 @@
 ** HostnameModule.cpp
 */
 
-#include "modules/HostnameModule.hpp"
 
 #include <pwd.h>
 
 #include <iostream>
+#include "modules/HostnameModule.hpp"
 
 namespace Krell {
-HostnameModule::HostnameModule(const std::string& file) : AModule{file} {}
+HostnameModule::HostnameModule(const std::string& file)
+    : AModule{file} {
+}
 
-void HostnameModule::update()
-{
+void HostnameModule::update() {
     std::string line;
 
     // Hostname
@@ -24,26 +25,32 @@ void HostnameModule::update()
     while (std::getline(_stream, line)) {
         if (line.empty())
             continue;
-        _data["hostname"] = std::make_unique<StringData>(line);
+        (*_data)["hostname"] = std::make_unique<StringData>(line);
     }
 
     // Username
     uid_t uid = geteuid();
     struct passwd* pw = getpwuid(uid);
     if (pw != nullptr)
-        _data["username"] = std::make_unique<StringData>(std::string(pw->pw_name));
+        (*_data)["username"] = std::make_unique<StringData>(
+            std::string(pw->pw_name));
 
-    for (auto& [key, data] : _data) {
+    for (auto& [key, data] : *_data) {
         std::clog << key << ": " << data->str() << std::endl;
     }
 }
 
-DataTab& HostnameModule::getData()
-{
+std::shared_ptr<ModuleTab> HostnameModule::getData() const {
     return _data;
 }
 
-void HostnameModule::subscribe(std::string const& name) {}
+std::string const& HostnameModule::getName() const {
+    return _name;
+}
 
-void HostnameModule::unsubscribe(std::string const& name) {}
-}  // namespace Krell
+void HostnameModule::subscribe(std::string const& name) {
+}
+
+void HostnameModule::unsubscribe(std::string const& name) {
+}
+} // namespace Krell

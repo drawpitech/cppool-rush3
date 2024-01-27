@@ -30,5 +30,5 @@ private:
     std::string _data;
 };
 
-using DataTab = std::map<std::string, std::unique_ptr<IData> >;
+using ModuleTab = std::map<std::string, std::unique_ptr<IData> >;
 }

@@ -7,8 +7,7 @@
 
 #pragma once
 #include <filesystem>
-#include <iosfwd>
-#include <sstream>
+#include <string>
 
 #include "IModule.hpp"
 

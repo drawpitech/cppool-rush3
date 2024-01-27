@@ -7,14 +7,18 @@
 
 #pragma once
 
+#include <string>
+
 #include "AModule.hpp"
 
 namespace Krell {
-class ProcessorModule : public AModule {
+class ProcessorModule final : public AModule {
 public:
-    explicit ProcessorModule(const std::string& path = "/proc/cpuinfo");
+    explicit ProcessorModule(std::string path = "/proc/cpuinfo");
 
-    DataTab& getData() override;
+    std::shared_ptr<ModuleTab> getData() const override;
+
+    std::string const& getName() const override;
 
     void update() override;
 
@@ -23,6 +27,7 @@ public:
     void unsubscribe(const std::string& name) override;
 
 private:
-    DataTab _data;
+    std::shared_ptr<ModuleTab> _data{new ModuleTab};
+    static inline const std::string _name{"processor"};
 };
 } // Krell

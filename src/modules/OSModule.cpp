@@ -10,10 +10,11 @@
 #include <iostream>
 
 namespace Krell {
-OSModule::OSModule(const std::string& file) : AModule{file} {}
+OSModule::OSModule(const std::string& file)
+    : AModule{file} {
+}
 
-void OSModule::update()
-{
+void OSModule::update() {
     std::string line;
 
     // OS / Distribution
@@ -26,10 +27,10 @@ void OSModule::update()
         std::string key = line.substr(0, index);
         std::string value = line.substr(index + 1);
         if (value.back() == '"')
-            value.pop_back();  
+            value.pop_back();
         if (value.front() == '"')
             value.erase(0, 1);
-        _data[key] = std::make_unique<StringData>(value);
+        (*_data)[key] = std::make_unique<StringData>(value);
     }
 
     // Kernel
@@ -39,20 +40,25 @@ void OSModule::update()
         if (line.empty())
             continue;
         std::string kernel = line.substr(0, line.find('('));
-        _data["kernel"] = std::make_unique<StringData>(kernel);
+        (*_data)["kernel"] = std::make_unique<StringData>(kernel);
     }
 
-    for (auto& [key, data] : _data) {
+    for (auto& [key, data] : *_data) {
         std::clog << key << ": " << data->str() << std::endl;
     }
 }
 
-DataTab& OSModule::getData()
-{
+std::shared_ptr<ModuleTab> OSModule::getData() const {
     return _data;
 }
 
-void OSModule::subscribe(std::string const& name) {}
+const std::string& OSModule::getName() const {
+    return _name;
+}
 
-void OSModule::unsubscribe(std::string const& name) {}
-}  // namespace Krell
+void OSModule::subscribe(std::string const& name) {
+}
+
+void OSModule::unsubscribe(std::string const& name) {
+}
+} // namespace Krell

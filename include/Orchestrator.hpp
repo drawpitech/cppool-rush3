@@ -13,15 +13,21 @@
 #include "IModule.hpp"
 
 namespace Krell {
+using OrchTable = std::map<std::string, std::shared_ptr<ModuleTab> >;
+
 class Orchestrator {
 public:
     Orchestrator() = default;
 
-    void addModule(const std::string& name, std::unique_ptr<IModule> module);
+    void addModule(std::unique_ptr<IModule> module);
 
     void update();
 
+    std::shared_ptr<OrchTable> getData() const;
+
 private:
     std::map<std::string, std::unique_ptr<IModule> > _modules{};
+
+    std::shared_ptr<OrchTable> _data{new OrchTable};
 };
 } // Krell

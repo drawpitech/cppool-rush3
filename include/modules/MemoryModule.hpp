@@ -18,12 +18,16 @@ public:
 
     void update() override;
 
-    DataTab &getData() override;
+    std::shared_ptr<ModuleTab> getData() const override;
 
-    void subscribe(std::string const &name) override;
+    std::string const& getName() const override;
 
-    void unsubscribe(std::string const &name) override;
+    void subscribe(std::string const& name) override;
+
+    void unsubscribe(std::string const& name) override;
+
 private:
-    DataTab _data;
+    std::shared_ptr<ModuleTab> _data{new ModuleTab};
+    static inline const std::string _name{"memory"};
 };
 }
