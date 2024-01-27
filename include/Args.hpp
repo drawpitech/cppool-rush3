@@ -21,15 +21,15 @@ enum OPTS
 
 struct opt_t
 {
+    options_t bit_mask;
     char c;
     std::string large;
-    options_t bit_mask;
+    std::string description;
 };
 
 static const std::vector<opt_t> OPTIONS = {{
-    {'h', "help", OPTS::HELP_MESS},
-    {'\0', "debug", OPTS::DEBUG_MOD},
-    {'\0', "", 0},
+    {OPTS::HELP_MESS, 'h', "help", "print this help message"},
+    {OPTS::DEBUG_MOD, '\0', "debug", "print debug messages"},
 }};
 
 options_t get_params(uint32_t argc, const char *argv[]);

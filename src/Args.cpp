@@ -12,9 +12,9 @@
 
 static void set_short_flag(options_t &options, char c)
 {
-    for (options_t i = 0; OPTIONS.at(i).bit_mask != 0; i++) {
-        if (OPTIONS.at(i).c == c) {
-            options |= OPTIONS.at(i).bit_mask;
+    for (const auto& opt : OPTIONS) {
+        if (opt.c == c) {
+            options |= opt.bit_mask;
             return;
         }
     }
@@ -23,9 +23,9 @@ static void set_short_flag(options_t &options, char c)
 
 static void set_large_flag(options_t &options, const std::string &str)
 {
-    for (options_t i = 0; OPTIONS.at(i).bit_mask != 0; i++) {
-        if (!OPTIONS.at(i).large.empty() && OPTIONS.at(i).large == str) {
-            options |= OPTIONS.at(i).bit_mask;
+    for (const auto& opt : OPTIONS) {
+        if (!opt.large.empty() && opt.large == str) {
+            options |= opt.bit_mask;
             return;
         }
     }

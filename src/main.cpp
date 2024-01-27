@@ -21,6 +21,15 @@ void displayHelp() {
     std::cout << "\t./myGKrellm" << std::endl;
     std::cout << "DESCRIPTION" << std::endl;
     std::cout << "\tmyGKrellm is a system monitor." << std::endl;
+    std::cout << "OPTIONS" << std::endl;
+    for (const auto& opt : OPTIONS) {
+        std::cout << "\t";
+        if (opt.c != '\0')
+            std::cout << "-" << opt.c << " ";
+        if (!opt.large.empty())
+            std::cout << "--" << opt.large << " ";
+        std::cout << ": " << opt.description << "\n" << std::flush;
+    }
 }
 
 void addModules(Krell::Orchestrator& orc) {
