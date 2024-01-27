@@ -19,6 +19,8 @@ add_executable(MyGKrellm
         src/NcursesDisplay.cpp
         src/SFMLDisplay.cpp
         src/modules/TimeModule.cpp
+        include/Utils.hpp
+        src/Utils.cpp
 )
 
 target_include_directories(MyGKrellm PUBLIC include)

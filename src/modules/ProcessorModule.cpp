@@ -5,39 +5,72 @@
 ** ProcessorModule.cpp
 */
 
+
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <memory>
+
+#include "Data.hpp"
+#include "AModule.hpp"
 #include "modules/ProcessorModule.hpp"
+#include "Utils.hpp"
 
 namespace Krell {
 ProcessorModule::ProcessorModule(std::string path)
-    : AModule(path) {
+    : AModule(path)
+{
 }
 
-std::shared_ptr<ModuleTab> ProcessorModule::getData() const {
+std::shared_ptr<ModuleTab> ProcessorModule::getData() const
+{
     return _data;
 }
 
-void ProcessorModule::subscribe(const std::string& name) {
+void ProcessorModule::subscribe(const std::string& name)
+{
 }
 
-void ProcessorModule::unsubscribe(const std::string& name) {
+void ProcessorModule::unsubscribe(const std::string& name)
+{
 }
 
-std::string const& ProcessorModule::getName() const {
+std::string const& ProcessorModule::getName() const
+{
     return _name;
 }
 
-void ProcessorModule::update() {
+void ProcessorModule::update()
+{
     AModule::update();
     std::string line;
-    std::getline(_stream, line);
+    bool isCore = false;
+    std::string coreName{};
     while (std::getline(_stream, line)) {
         std::istringstream iss(line);
         std::string key{};
         std::string value{};
         std::getline(iss, key, ':');
+        key = Utils::trim(key);
         std::getline(iss, value);
+        value = Utils::trim(value);
         if (key == "processor") {
-            break;
+            coreName = value;
+            continue;
+        }
+        if (isCore && key != "cpu MHz")
+            continue;
+        if (!isCore && key.empty()) {
+            isCore = true;
+            continue;
+        }
+        if (key == "flags") {
+            continue;
+        }
+        if (key == "cpu MHz") {
+            (*_data)[key + ' ' + coreName] = std::make_unique<
+                StringData>(value);
+            continue;
         }
         (*_data)[key] = std::make_unique<StringData>(value);
     }

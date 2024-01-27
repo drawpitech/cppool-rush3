@@ -27,15 +27,19 @@ void NcursesDisplay::initialize()
 
 void NcursesDisplay::update([[maybe_unused]] std::shared_ptr<OrchTable> data)
 {
-    // clear();
+    clear();
     _windows.clear();
-    int y = 0;
+    int y_off = 0;
     for (const auto& [name, module] : *data) {
-        WINDOW* win = subwin(stdscr, 10, 40, y, 0);
+        WINDOW* win = subwin(stdscr, module->size() + 2, COLS, y_off, 0);
         _windows.push_back(win);
-        y += 10;
+        y_off+= module->size() + 2;
         box(win, 0, 0);
-        mvwprintw(win, 0, 2, name.c_str());
+        int y_loff = 0;
+        mvwprintw(win, y_loff++, 2, "%s", name.c_str());
+        for (const auto& [key, value] : *module) {
+            mvwprintw(win, y_loff++, 2, "%s: %s", key.c_str(), value->str().c_str());
+        }
     }
 }
 

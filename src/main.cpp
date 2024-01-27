@@ -37,7 +37,7 @@ void displayHelp()
 
 void addModules(Krell::Orchestrator& orc)
 {
-    orc.addModule(std::make_unique<Krell::MemoryModule>());
+    // orc.addModule(std::make_unique<Krell::MemoryModule>());
     orc.addModule(std::make_unique<Krell::ProcessorModule>());
     orc.addModule(std::make_unique<Krell::OSModule>());
     orc.addModule(std::make_unique<Krell::HostnameModule>());
