@@ -10,7 +10,6 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-#include <iostream>
 
 #include <SFML/Window/WindowStyle.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -79,7 +78,7 @@ SFMLDisplay::SFMLDisplay()
     _text.setFillColor(sf::Color::White);
 }
 
-void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data)
+void SFMLDisplay::update(std::shared_ptr<OrchTable> data)
 {
     eventHandler();
     nextColor();
