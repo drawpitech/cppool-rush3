@@ -8,9 +8,13 @@
 #include <iostream>
 #include <thread>
 
+#include "modules/ProcessorModule.hpp"
 #include "Args.hpp"
 #include "Orchestrator.hpp"
+#include "modules/HostnameModule.hpp"
 #include "modules/MemoryModule.hpp"
+#include "modules/OSModule.hpp"
+#include "modules/TimeModule.hpp"
 
 void displayHelp() {
     std::cout << "USAGE" << std::endl;
@@ -19,28 +23,30 @@ void displayHelp() {
     std::cout << "\tmyGKrellm is a system monitor." << std::endl;
 }
 
+void addModules(Krell::Orchestrator& orc) {
+    orc.addModule(std::make_unique<Krell::MemoryModule>());
+    orc.addModule(std::make_unique<Krell::ProcessorModule>());
+    orc.addModule(std::make_unique<Krell::OSModule>());
+    orc.addModule(std::make_unique<Krell::HostnameModule>());
+    orc.addModule(std::make_unique<Krell::TimeModule>());
+}
+
 [[noreturn]] int main(const int argc, const char* argv[]) {
     options_t options = get_params(argc, argv);
 
-    if (options & OPT_HELP_MESS) {
+    if ((options & OPT_HELP_MESS) != 0) {
         displayHelp();
         exit(0);
     }
 
     Krell::Orchestrator orchestrator;
-
     const auto interval = std::chrono::seconds(1);
 
-    orchestrator.addModule("memory",
-                           std::make_unique<Krell::MemoryModule>());
+    addModules(orchestrator);
 
     while (true) {
-        std::this_thread::sleep_for(interval);
-
         orchestrator.update();
+        auto data = orchestrator.getData();
+        std::this_thread::sleep_for(interval);
     }
-
-    // std::cout << mem_module.getModuleName() << std::endl;
 }
-
-
