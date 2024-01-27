@@ -19,9 +19,9 @@
 #include "modules/TimeModule.hpp"
 
 void SFMLDisplay::initialize() {
-    window.create(sf::VideoMode(800, 600), "SFML Display");
+    window.create(sf::VideoMode(800, 600), "SFML Display", sf::Style::Close);
     window.setTitle("MyGKrellM GTK");
-    window.setFramerateLimit(2);
+    window.setFramerateLimit(5);
     if (!font.loadFromFile("./assets/arial.ttf")) {
         exit(1);
     }
@@ -47,9 +47,17 @@ void SFMLDisplay::mainLogic(Krell::Orchestrator& orchestrator) {
 
 void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data) {
     window.clear();
+     static int red = 100;
+    static int green = 100;
+    static int blue = 100;
 
+    red = (red + 1) % 256;
+    green = (green + 2) % 256;
+    blue = (blue + 3) % 256;
+    sf::Color dynamicColor(red, green, blue);
     int offsetX = 10;
     int offsetY = 10;
+    int maxColumnWidth = 0;
 
     for (const auto& modulePair : *data) {
         const auto& moduleName = modulePair.first;
@@ -58,12 +66,12 @@ void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data) {
         sf::Text moduleTitle;
         moduleTitle.setFont(font);
         moduleTitle.setCharacterSize(15);
-        moduleTitle.setFillColor(sf::Color::Black);
+        moduleTitle.setFillColor(sf::Color::Red);
         moduleTitle.setString(moduleName);
 
         float maxWidth = moduleTitle.getLocalBounds().width;
 
-        std::string moduleText = moduleName + "\n";
+        std::string moduleText = "";
         for (const auto& dataPair : *moduleTab) {
             std::string currentString = dataPair.first + ": " + dataPair.second->str();
             moduleText += currentString + "\n";
@@ -75,6 +83,26 @@ void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data) {
             }
         }
 
+        int rectangleHeight = 30 + (std::count(moduleText.begin(), moduleText.end(), '\n') * 15);
+
+        if (offsetY + rectangleHeight > window.getSize().y) {
+            offsetX += maxColumnWidth + 20;
+            offsetY = 10;
+            maxColumnWidth = 0;
+        }
+
+        maxColumnWidth = std::max(maxColumnWidth, static_cast<int>(maxWidth + 10));
+
+        if (offsetX + maxWidth + 10 > window.getSize().x) {
+            break;
+        }
+
+        sf::RectangleShape rectangle(sf::Vector2f(maxWidth + 10, rectangleHeight));
+        rectangle.setPosition(offsetX, offsetY);
+        rectangle.setFillColor(sf::Color(200, 200, 200));
+        rectangle.setOutlineThickness(2);
+        rectangle.setOutlineColor(dynamicColor);
+
         moduleTitle.setPosition(offsetX + 5, offsetY + 5);
 
         sf::Text moduleData;
@@ -84,25 +112,17 @@ void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data) {
         moduleData.setString(moduleText);
         moduleData.setPosition(offsetX + 5, offsetY + 30);
 
-        int rectangleHeight = 30 + (std::count(moduleText.begin(), moduleText.end(), '\n') * 15);
-
-        sf::RectangleShape rectangle(sf::Vector2f(maxWidth + 10, rectangleHeight)); // 10 for padding
-        rectangle.setPosition(offsetX, offsetY);
-        rectangle.setFillColor(sf::Color(200, 200, 200));
-        rectangle.setOutlineThickness(2);
-        rectangle.setOutlineColor(sf::Color(0, 0, 0));
-
         window.draw(rectangle);
         window.draw(moduleTitle);
         window.draw(moduleData);
 
         offsetY += rectangleHeight + 10;
-        if (offsetY + rectangleHeight > window.getSize().y) {
-            offsetY = 10;
-            offsetX += maxWidth + 20;
-        }
     }
+
+    window.display();
 }
+
+
 
 
 void SFMLDisplay::render() {

@@ -32,7 +32,7 @@ struct opt_t
 static const std::vector<opt_t> OPTIONS = {{
     {OPTS::HELP_MESS, 'h', "help", "print this help message"},
     {OPTS::DEBUG_MOD, '\0', "debug", "print debug messages"},
-    {OPTS::GRAPHICAL, '\0', "gui", "lauch the graphical mode with SFML lib"},
+    {OPTS::GRAPHICAL, '\0', "gui", "launch the graphical mode with SFML lib"},
 }};
 
 options_t get_params(std::span<const char*> args);

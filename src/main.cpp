@@ -56,11 +56,15 @@ std::unique_ptr<Krell::IDisplay> getDisplay(const options_t& options)
     std::clog << "Options: " << options << std::endl;
     if ((options & OPTS::DEBUG_MOD) != 0)
         return nullptr;
+    if ((options & OPTS::GRAPHICAL))
+        return std::make_unique<SFMLDisplay>();
     return std::make_unique<Krell::NcursesDisplay>();
 }
 
-[[noreturn]] int main(const int argc, const char* argv[])
+int main(const int argc, const char* argv[])
 {
+    SFMLDisplay sfmlDisplay;
+    Krell::Orchestrator orchestrator;
     const options_t options = get_params(
         std::span{argv, static_cast<std::size_t>(argc)});
 
@@ -69,13 +73,16 @@ std::unique_ptr<Krell::IDisplay> getDisplay(const options_t& options)
         std::exit(0);
     }
 
-    Krell::Orchestrator orchestrator;
     const auto interval = std::chrono::milliseconds(500);
 
     addModules(orchestrator);
 
     std::unique_ptr<Krell::IDisplay> display = getDisplay(options);
 
+    if (options & OPTS::GRAPHICAL) {
+        sfmlDisplay.initialize();
+        sfmlDisplay.mainLogic(orchestrator);
+    }
     while (true) {
         orchestrator.update();
         if ((options & OPTS::DEBUG_MOD) != 0)
@@ -85,8 +92,6 @@ std::unique_ptr<Krell::IDisplay> getDisplay(const options_t& options)
             display->update(orchestrator.getData());
             display->render();
         }
-
-        std::this_thread::sleep_for(interval);
     }
 }
 
