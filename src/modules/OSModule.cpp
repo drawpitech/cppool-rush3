@@ -2,21 +2,17 @@
 ** EPITECH PROJECT, 2024
 ** MyGKrellm
 ** File description:
-** SystemInfoModule.cpp
+** OSModule.cpp
 */
 
-#include "modules/SystemInfoModule.hpp"
+#include "modules/OSModule.hpp"
 
-#include <pwd.h>
-#include <sys/types.h>
-
-#include <cstddef>
 #include <iostream>
 
 namespace Krell {
-SystemInfoModule::SystemInfoModule(const std::string& file) : AModule{file} {}
+OSModule::OSModule(const std::string& file) : AModule{file} {}
 
-void SystemInfoModule::update()
+void OSModule::update()
 {
     std::string line;
 
@@ -36,21 +32,6 @@ void SystemInfoModule::update()
         _data[key] = std::make_unique<StringData>(value);
     }
 
-    // Hostname
-    _path = "/proc/sys/kernel/hostname";
-    AModule::update();
-    while (std::getline(_stream, line)) {
-        if (line.empty())
-            continue;
-        _data["hostname"] = std::make_unique<StringData>(line);
-    }
-
-    // Username
-    uid_t uid = geteuid();
-    struct passwd* pw = getpwuid(uid);
-    if (pw != nullptr)
-        _data["username"] = std::make_unique<StringData>(std::string(pw->pw_name));
-
     // Kernel
     _path = "/proc/version";
     AModule::update();
@@ -66,12 +47,12 @@ void SystemInfoModule::update()
     }
 }
 
-DataTab& SystemInfoModule::getData()
+DataTab& OSModule::getData()
 {
     return _data;
 }
 
-void SystemInfoModule::subscribe(std::string const& name) {}
+void OSModule::subscribe(std::string const& name) {}
 
-void SystemInfoModule::unsubscribe(std::string const& name) {}
+void OSModule::unsubscribe(std::string const& name) {}
 }  // namespace Krell

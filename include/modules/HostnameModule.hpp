@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** MyGKrellm
 ** File description:
-** SystemInfo.hpp
+** Hostname.hpp
 */
 
 #pragma once
@@ -12,10 +12,10 @@
 #include "AModule.hpp"
 
 namespace Krell {
-class SystemInfoModule final : public AModule
+class HostnameModule final : public AModule
 {
    public:
-    explicit SystemInfoModule(const std::string &file = "/proc/sys/kernel/hostname");
+    explicit HostnameModule(const std::string &file = "/proc/sys/kernel/hostname");
 
     void update() override;
     DataTab &getData() override;
