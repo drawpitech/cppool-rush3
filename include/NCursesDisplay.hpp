@@ -9,6 +9,7 @@
 
 #include <ncurses.h>
 #include <memory>
+#include <set>
 #include <vector>
 
 #include "IDisplay.hpp"
@@ -30,7 +31,11 @@ public:
 
 private:
     std::vector<WINDOW*> _windows;
+    std::set<std::string> _folded;
 
     bool _running{true};
+    size_t _selected{0};
+
+    void handleInput(std::vector<std::string> windows);
 };
 }
