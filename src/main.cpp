@@ -7,7 +7,10 @@
 
 #include <iostream>
 #include <span>
-#include <modules/MemoryModule.hpp>
+#include <thread>
+
+#include "modules/MemoryModule.hpp"
+#include "Orchestrator.hpp"
 
 void displayHelp() {
     std::cout << "USAGE" << std::endl;
@@ -16,20 +19,20 @@ void displayHelp() {
     std::cout << "\tmyGKrellm is a system monitor." << std::endl;
 }
 
-[[noreturn]] int main(int argc, char* argv[]) {
+[[noreturn]] int main(const int argc, const char* argv[]) {
     std::span args{argv, static_cast<std::size_t>(argc)};
 
-    Krell::MemoryModule mem_module("/proc/meminfo");
-    mem_module.update();
+    Krell::Orchestrator orchestrator;
 
-    mem_module.getData();
+    const auto interval = std::chrono::seconds(1);
 
-    for (auto& [key, value] : mem_module.getData()) {
-        std::cout << key << ": " << value->toString() << std::endl;
-    }
+    orchestrator.addModule("memory",
+                           std::make_unique<Krell::MemoryModule>());
 
     while (true) {
+        std::this_thread::sleep_for(interval);
 
+        orchestrator.update();
     }
 
     // std::cout << mem_module.getModuleName() << std::endl;

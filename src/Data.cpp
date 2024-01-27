@@ -8,11 +8,11 @@
 #include "Data.hpp"
 
 namespace Krell {
-NumberData::NumberData(const double& size, const std::string& unit)
-    : _unit{unit}, _size{size} {
+StringData::StringData(std::string str)
+    : _data{std::move(str)} {
 }
 
-std::string NumberData::toString() const {
-    return std::to_string(_size) + _unit;
+std::string StringData::str() const {
+    return _data;
 }
 }

@@ -5,7 +5,9 @@
 ** Orchestrator.cpp
 */
 
-#include "../include/Orchestrator.hpp"
+
+#include <ranges>
+#include "Orchestrator.hpp"
 
 namespace Krell {
 void Orchestrator::addModule(const std::string& name,
@@ -14,7 +16,7 @@ void Orchestrator::addModule(const std::string& name,
 }
 
 void Orchestrator::update() {
-    for (auto& [name, module] : _modules) {
+    for (auto const &module: _modules | std::views::values) {
         module->update();
     }
 }

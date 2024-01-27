@@ -19,15 +19,20 @@ void MemoryModule::update() {
     while (std::getline(_stream, line)) {
         std::istringstream iss(line);
         std::string key;
-        double value = 0;
-        std::string unit;
-        iss >> key >> value >> unit;
+        std::string value;
+        iss >> key >> value;
         key.pop_back();
-        _data[key] = std::make_unique<NumberData>(value, unit);
+        _data[key] = std::make_unique<StringData>(value);
     }
 }
 
 DataTab& MemoryModule::getData() {
     return _data;
+}
+
+void MemoryModule::subscribe(std::string const& name) {
+}
+
+void MemoryModule::unsubscribe(std::string const& name) {
 }
 }

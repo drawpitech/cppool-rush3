@@ -5,10 +5,10 @@
 ** AModule.cpp
 */
 
-#include "AModule.hpp"
-
 #include <fstream>
 #include <iostream>
+
+#include "AModule.hpp"
 
 namespace Krell {
 AModule::AModule(const std::string& path)

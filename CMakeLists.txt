@@ -13,6 +13,8 @@ add_executable(MyGKrellm
         src/Data.cpp
         src/Orchestrator.cpp
         include/Orchestrator.hpp
+        src/modules/ProcessorModule.cpp
+        include/modules/ProcessorModule.hpp
 )
 
 target_include_directories(MyGKrellm PUBLIC include)

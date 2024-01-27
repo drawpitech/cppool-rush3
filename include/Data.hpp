@@ -15,21 +15,20 @@ class IData {
 public:
     virtual ~IData() = default;
 
-    virtual std::string toString() const = 0;
+    virtual std::string str() const = 0;
 
 private:
 };
 
-class NumberData : public IData {
+class StringData final : public IData {
 public:
-    NumberData(const double& size, const std::string& unit);
+    explicit StringData(std::string str);
 
-    std::string toString() const override;
+    std::string str() const override;
 
 private:
-    std::string _unit;
-    double _size;
+    std::string _data;
 };
 
-using DataTab = std::map<std::string, std::unique_ptr<IData>>;
+using DataTab = std::map<std::string, std::unique_ptr<IData> >;
 }

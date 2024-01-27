@@ -6,17 +6,19 @@
 */
 
 #pragma once
-#include <IModule.hpp>
 #include <filesystem>
 #include <iosfwd>
 #include <sstream>
 
+#include "IModule.hpp"
+
 namespace Krell {
-class AModule: public IModule {
+class AModule : public IModule {
 public:
     explicit AModule(const std::string& path);
 
     void update() override;
+
 protected:
     std::istringstream _stream;
     std::filesystem::path _path;

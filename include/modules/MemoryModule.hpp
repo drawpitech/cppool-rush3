@@ -14,12 +14,15 @@
 namespace Krell {
 class MemoryModule final : public AModule {
 public:
-    explicit MemoryModule(const std::string& file);
+    explicit MemoryModule(const std::string& file = "/proc/meminfo");
 
     void update() override;
 
     DataTab &getData() override;
 
+    void subscribe(std::string const &name) override;
+
+    void unsubscribe(std::string const &name) override;
 private:
     DataTab _data;
 };

@@ -6,10 +6,11 @@
 */
 
 #pragma once
-#include <IModule.hpp>
 #include <map>
 #include <memory>
 #include <string>
+
+#include "IModule.hpp"
 
 namespace Krell {
 class Orchestrator {
