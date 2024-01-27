@@ -6,11 +6,11 @@
 */
 
 #include <iostream>
-#include <span>
 #include <thread>
 
-#include "modules/MemoryModule.hpp"
+#include "Args.hpp"
 #include "Orchestrator.hpp"
+#include "modules/MemoryModule.hpp"
 
 void displayHelp() {
     std::cout << "USAGE" << std::endl;
@@ -20,7 +20,12 @@ void displayHelp() {
 }
 
 [[noreturn]] int main(const int argc, const char* argv[]) {
-    std::span args{argv, static_cast<std::size_t>(argc)};
+    options_t options = get_params(argc, argv);
+
+    if (options & OPT_HELP_MESS) {
+        displayHelp();
+        exit(0);
+    }
 
     Krell::Orchestrator orchestrator;
 
