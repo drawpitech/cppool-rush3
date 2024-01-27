@@ -14,6 +14,7 @@
 #include "modules/HostnameModule.hpp"
 #include "modules/MemoryModule.hpp"
 #include "modules/OSModule.hpp"
+#include "modules/TimeModule.hpp"
 
 void displayHelp() {
     std::cout << "USAGE" << std::endl;
@@ -27,6 +28,7 @@ void addModules(Krell::Orchestrator& orc) {
     orc.addModule(std::make_unique<Krell::ProcessorModule>());
     orc.addModule(std::make_unique<Krell::OSModule>());
     orc.addModule(std::make_unique<Krell::HostnameModule>());
+    orc.addModule(std::make_unique<Krell::TimeModule>());
 }
 
 [[noreturn]] int main(const int argc, const char* argv[]) {
