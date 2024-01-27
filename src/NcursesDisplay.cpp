@@ -18,6 +18,12 @@ NcursesDisplay::NcursesDisplay()
     cbreak();
     noecho();
     curs_set(0);
+    start_color();
+    init_pair(0, COLOR_WHITE, COLOR_BLACK);
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    init_pair(2, COLOR_RED, COLOR_BLACK);
+    init_pair(3, COLOR_BLUE, COLOR_BLACK);
+    nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
 }
 
@@ -30,23 +36,34 @@ void NcursesDisplay::update([[maybe_unused]] std::shared_ptr<OrchTable> data)
     clear();
     _windows.clear();
     int y_off = 0;
-    int x_off = -16;
     for (const auto& [name, module] : *data) {
         WINDOW* win = subwin(stdscr, module->size() + 2, COLS, y_off, 0);
         _windows.push_back(win);
-        y_off+= module->size() + 2;
-        box(win, 0, 0);
+        y_off += module->size() + 2;
         int y_loff = 0;
-        mvwprintw(win, y_loff++, 2, "%s", name.c_str());
+        wcolor_set(win, 1, nullptr);
+        box(win, 0, 0);
+        mvwaddch(win, y_loff, 5 + name.size(), ACS_ULCORNER);
+        mvwaddch(win, y_loff, 2, ACS_URCORNER);
+        wcolor_set(win, 0, nullptr);
+        wcolor_set(win, 2, nullptr);
+        mvwprintw(win, y_loff++, 3, " %s ", name.c_str());
+        wcolor_set(win, 0, nullptr);
+
         for (const auto& [key, value] : *module) {
-            mvwprintw(win, y_loff++, 2, "%*s %*s", x_off ,(key + ":").c_str(), COLS + x_off - 5, value->str().c_str());
+            mvwprintw(win, y_loff, 3, "%s:", key.c_str());
+            wcolor_set(win, 3, nullptr);
+            mvwprintw(
+                win, y_loff++, COLS - 3 - value->str().size(), "%s",
+                value->str().c_str());
+            wcolor_set(win, 0, nullptr);
         }
     }
 }
 
 void NcursesDisplay::render()
 {
-    for (const auto module: _windows) {
+    for (const auto module : _windows) {
         wrefresh(module);
     }
     // refresh();
