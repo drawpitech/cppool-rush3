@@ -12,7 +12,7 @@
 
 static void set_short_flag(options_t &options, char c)
 {
-    for (const auto& opt : OPTIONS) {
+    for (const auto &opt : OPTIONS) {
         if (opt.c == c) {
             options |= opt.bit_mask;
             return;
@@ -23,7 +23,7 @@ static void set_short_flag(options_t &options, char c)
 
 static void set_large_flag(options_t &options, const std::string &str)
 {
-    for (const auto& opt : OPTIONS) {
+    for (const auto &opt : OPTIONS) {
         if (!opt.large.empty() && opt.large == str) {
             options |= opt.bit_mask;
             return;
@@ -32,10 +32,9 @@ static void set_large_flag(options_t &options, const std::string &str)
     std::cerr << "Invalid option `--" << str << "`.\n" << std::flush;
 }
 
-options_t get_params(uint32_t argc, const char *argv[])
+options_t get_params(std::span<const char *> args)
 {
     options_t options = 0;
-    std::span args{argv, static_cast<std::size_t>(argc)};
 
     for (const auto &arg : args.subspan(1)) {
         std::string str{arg};

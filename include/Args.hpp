@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
 #include <string>
 #include <vector>
 
@@ -17,6 +18,7 @@ enum OPTS
 {
     DEBUG_MOD = 1 << 0,
     HELP_MESS = 1 << 1,
+    GRAPHICAL = 1 << 2,
 };
 
 struct opt_t
@@ -30,6 +32,7 @@ struct opt_t
 static const std::vector<opt_t> OPTIONS = {{
     {OPTS::HELP_MESS, 'h', "help", "print this help message"},
     {OPTS::DEBUG_MOD, '\0', "debug", "print debug messages"},
+    {OPTS::GRAPHICAL, '\0', "gui", "lauch the graphical mode with SFML lib"},
 }};
 
-options_t get_params(uint32_t argc, const char *argv[]);
+options_t get_params(std::span<const char*> args);

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <memory>
+#include <span>
 #include <thread>
 
 #include "Args.hpp"
@@ -54,7 +55,8 @@ std::unique_ptr<Krell::IDisplay> getDisplay(const options_t& options)
 
 [[noreturn]] int main(const int argc, const char* argv[])
 {
-    const options_t options = get_params(argc, argv);
+    const options_t options = get_params(
+        std::span{argv, static_cast<std::size_t>(argc)});
 
     if ((options & OPTS::HELP_MESS) != 0) {
         displayHelp();

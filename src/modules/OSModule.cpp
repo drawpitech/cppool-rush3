@@ -10,6 +10,10 @@
 #include <algorithm>
 #include <vector>
 
+namespace {
+inline const std::vector RELEVANT_KEYS{"NAME", "VERSION", "kernel"};
+} // namespace
+
 namespace Krell {
 OSModule::OSModule(const std::string& file) : AModule{file} {}
 
@@ -26,8 +30,8 @@ void OSModule::update()
             continue;
 
         std::string key = line.substr(0, index);
-        static const std::vector<std::string> relevant_keys = {"NAME", "VERSION"};
-        if (std::find(relevant_keys.begin(), relevant_keys.end(), key) == relevant_keys.end())
+        if (std::find(RELEVANT_KEYS.begin(), RELEVANT_KEYS.end(), key) ==
+            RELEVANT_KEYS.end())
             continue;
 
         std::string value = line.substr(index + 1);
