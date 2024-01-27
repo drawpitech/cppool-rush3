@@ -7,9 +7,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "AModule.hpp"
+#include "Data.hpp"
 
 namespace Krell {
 class TimeModule final : public AModule

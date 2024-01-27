@@ -7,16 +7,20 @@
 
 
 #include <iostream>
+#include <string>
 #include <pwd.h>
 
+#include "AModule.hpp"
 #include "modules/HostnameModule.hpp"
 
 namespace Krell {
 HostnameModule::HostnameModule(const std::string& file)
-    : AModule{file} {
+    : AModule{file}
+{
 }
 
-void HostnameModule::update() {
+void HostnameModule::update()
+{
     std::string line;
 
     // Hostname
@@ -32,7 +36,8 @@ void HostnameModule::update() {
     uid_t uid = geteuid();
     struct passwd* pw = getpwuid(uid);
     if (pw != nullptr)
-        (*_data)["username"] = std::make_unique<StringData>(std::string(pw->pw_name));
+        (*_data)["username"] = std::make_unique<StringData>(
+            std::string(pw->pw_name));
 }
 
 void HostnameModule::log() const
@@ -41,17 +46,21 @@ void HostnameModule::log() const
         std::clog << key << ": " << data->str() << "\n";
 }
 
-std::shared_ptr<ModuleTab> HostnameModule::getData() const {
+std::shared_ptr<ModuleTab> HostnameModule::getData() const
+{
     return _data;
 }
 
-std::string const& HostnameModule::getName() const {
+std::string const& HostnameModule::getName() const
+{
     return _name;
 }
 
-void HostnameModule::subscribe(std::string const& name) {
+void HostnameModule::subscribe(std::string const& name)
+{
 }
 
-void HostnameModule::unsubscribe(std::string const& name) {
+void HostnameModule::unsubscribe(std::string const& name)
+{
 }
 } // namespace Krell

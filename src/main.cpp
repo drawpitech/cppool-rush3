@@ -5,11 +5,11 @@
 ** main.cpp
 */
 
-#include <NcursesDisplay.hpp>
 #include <iostream>
 #include <memory>
 #include <thread>
 
+#include "NcursesDisplay.hpp"
 #include "modules/ProcessorModule.hpp"
 #include "Args.hpp"
 #include "Orchestrator.hpp"
@@ -18,7 +18,8 @@
 #include "modules/OSModule.hpp"
 #include "modules/TimeModule.hpp"
 
-void displayHelp() {
+void displayHelp()
+{
     std::cout << "USAGE" << std::endl;
     std::cout << "\t./myGKrellm" << std::endl;
     std::cout << "DESCRIPTION" << std::endl;
@@ -34,7 +35,8 @@ void displayHelp() {
     }
 }
 
-void addModules(Krell::Orchestrator& orc) {
+void addModules(Krell::Orchestrator& orc)
+{
     orc.addModule(std::make_unique<Krell::MemoryModule>());
     orc.addModule(std::make_unique<Krell::ProcessorModule>());
     orc.addModule(std::make_unique<Krell::OSModule>());
@@ -42,7 +44,8 @@ void addModules(Krell::Orchestrator& orc) {
     orc.addModule(std::make_unique<Krell::TimeModule>());
 }
 
-[[noreturn]] int main(const int argc, const char* argv[]) {
+[[noreturn]] int main(const int argc, const char* argv[])
+{
     const options_t options = get_params(argc, argv);
 
     if ((options & OPTS::HELP_MESS) != 0) {

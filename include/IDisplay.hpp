@@ -6,11 +6,13 @@
 */
 
 #pragma once
-#include <Orchestrator.hpp>
 #include <memory>
 
+#include "Orchestrator.hpp"
+
 namespace Krell {
-class IDisplay {
+class IDisplay
+{
 public:
     virtual ~IDisplay() = default;
 
