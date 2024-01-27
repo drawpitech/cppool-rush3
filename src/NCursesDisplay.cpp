@@ -70,18 +70,24 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
     size_t i = 0;
 
     for (const auto& [name, module] : *data) {
-        if (_windows.find(name) == _windows.end())
+        if (!_windows.contains(name))
             _windows[name] = {nullptr, false};
 
         Window& win = _windows[name];
         const bool is_selected = i == _selected;
         const int height = (win.folded) ? 2 : (int)module->size() + 2;
 
-        if (win.win != nullptr) {
+        if (win.win == nullptr) {
+            win.win = subwin(stdscr, height, COLS, y_off, 0);
+        } else {
             wclear(win.win);
-            delwin(win.win);
+            if (getbegy(win.win) != y_off) {
+                delwin(win.win);
+                win.win = subwin(stdscr, height, COLS, y_off, 0);
+            }
+            if (getmaxy(win.win) != height)
+                wresize(win.win, height, COLS);
         }
-        win.win = subwin(stdscr, height, COLS, y_off, 0);
 
         y_off += height;
         int y_loff = 0;
