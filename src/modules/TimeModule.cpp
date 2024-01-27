@@ -49,8 +49,4 @@ const std::string& TimeModule::getName() const
 {
     return _name;
 }
-
-void TimeModule::subscribe(std::string const& name) {}
-
-void TimeModule::unsubscribe(std::string const& name) {}
 }  // namespace Krell

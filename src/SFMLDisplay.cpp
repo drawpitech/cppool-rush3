@@ -78,7 +78,7 @@ void SFMLDisplay::update(std::shared_ptr<Krell::OrchTable> data)
         int const rectangleHeight =
             30 + std::ranges::count(moduleText, '\n') * 15;
 
-        if (offsetY + rectangleHeight > window.getSize().y) {
+        if (offsetY + rectangleHeight > (int)window.getSize().y) {
             offsetX += maxColumnWidth + 20;
             offsetY = 10;
             maxColumnWidth = 0;

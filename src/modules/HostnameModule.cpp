@@ -52,8 +52,4 @@ std::string const& HostnameModule::getName() const
 {
     return _name;
 }
-
-void HostnameModule::subscribe(std::string const& name) {}
-
-void HostnameModule::unsubscribe(std::string const& name) {}
 }  // namespace Krell

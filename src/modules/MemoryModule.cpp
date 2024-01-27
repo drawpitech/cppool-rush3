@@ -56,13 +56,4 @@ std::string const& MemoryModule::getName() const
 {
     return _name;
 }
-
-
-void MemoryModule::subscribe(std::string const& name)
-{
-}
-
-void MemoryModule::unsubscribe(std::string const& name)
-{
-}
-}
+} // namespace Krell

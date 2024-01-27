@@ -22,10 +22,6 @@ public:
 
     void update() override;
 
-    void subscribe(const std::string& name) override;
-
-    void unsubscribe(const std::string& name) override;
-
 private:
     std::shared_ptr<ModuleTab> _data{new ModuleTab};
     static inline const std::string _name{"Processor"};

@@ -29,8 +29,8 @@ std::string rtrim(const std::string& s, const char* t)
 std::string trim(const std::string& s, const char* t)
 {
     std::string str = s;
-    str = ltrim(str);
-    str = rtrim(str);
+    str = ltrim(str, t);
+    str = rtrim(str, t);
     return str;
 }
 

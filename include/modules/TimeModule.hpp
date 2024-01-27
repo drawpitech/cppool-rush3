@@ -25,10 +25,6 @@ class TimeModule final : public AModule
 
     const std::string& getName() const override;
 
-    void subscribe(std::string const& name) override;
-
-    void unsubscribe(std::string const& name) override;
-
    private:
     std::shared_ptr<ModuleTab> _data{new ModuleTab};
 

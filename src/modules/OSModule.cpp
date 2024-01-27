@@ -62,8 +62,4 @@ const std::string& OSModule::getName() const
 {
     return _name;
 }
-
-void OSModule::subscribe(std::string const& name) {}
-
-void OSModule::unsubscribe(std::string const& name) {}
 }  // namespace Krell

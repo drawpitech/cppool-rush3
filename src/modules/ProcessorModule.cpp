@@ -34,14 +34,6 @@ std::shared_ptr<ModuleTab> ProcessorModule::getData() const
     return _data;
 }
 
-void ProcessorModule::subscribe(const std::string& name)
-{
-}
-
-void ProcessorModule::unsubscribe(const std::string& name)
-{
-}
-
 std::string const& ProcessorModule::getName() const
 {
     return _name;

@@ -22,10 +22,6 @@ public:
 
     std::string const& getName() const override;
 
-    void subscribe(std::string const& name) override;
-
-    void unsubscribe(std::string const& name) override;
-
 private:
     std::shared_ptr<ModuleTab> _data{new ModuleTab};
     static inline const std::string _name{"Memory"};
