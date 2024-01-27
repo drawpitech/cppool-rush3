@@ -5,33 +5,40 @@
 ** SFMLDisplay
 */
 
-#ifndef SFMLDISPLAY_HPP_
-#define SFMLDISPLAY_HPP_
+#pragma once
+
+#include <memory>
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Color.hpp>
+
 #include "IDisplay.hpp"
 #include "Orchestrator.hpp"
 
-class SFMLDisplay : public Krell::IDisplay
+namespace Krell {
+class SFMLDisplay final : public IDisplay
 {
-    sf::RenderWindow window;
-    sf::Font font;
-    sf::Text text;
+    void eventHandler();
+
+    void nextColor();
 
 public:
     SFMLDisplay();
 
-    void update(std::shared_ptr<Krell::OrchTable> data) override;
+    void update(std::shared_ptr<OrchTable> data) override;
 
     bool isRunning() const override;
 
     void render() override;
 
-    void mainLogic(Krell::Orchestrator& orchestrator);
+private:
+    std::uint8_t _hue{0};
+    sf::Color _color{};
 
-    ~SFMLDisplay() override = default;
+    sf::RenderWindow _window;
+    sf::Font _font;
+    sf::Text _text;
 };
-
-
-#endif /* !SFMLDISPLAY_HPP_ */
+}

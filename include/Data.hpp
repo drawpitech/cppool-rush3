@@ -8,10 +8,12 @@
 #pragma once
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 
 namespace Krell {
-class IData {
+class IData
+{
 public:
     virtual ~IData() = default;
 
@@ -20,7 +22,8 @@ public:
 private:
 };
 
-class StringData final : public IData {
+class StringData final : public IData
+{
 public:
     explicit StringData(std::string str);
 
@@ -29,6 +32,20 @@ public:
 private:
     std::string _data;
 };
+
+class NumberData final : public IData
+{
+public:
+    explicit NumberData(std::string unit, bool isSi = false);
+
+    std::string str() const override;
+
+private:
+    std::string _unit;
+    bool _isSi;
+};
+
+
 
 using ModuleTab = std::map<std::string, std::unique_ptr<IData> >;
 }

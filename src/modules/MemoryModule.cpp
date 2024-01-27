@@ -14,6 +14,7 @@
 #include "Utils.hpp"
 #include "Data.hpp"
 #include "AModule.hpp"
+#include "data/GraphData.hpp"
 
 namespace {
 inline const std::unordered_map<std::string, std::string> relevantKeys{

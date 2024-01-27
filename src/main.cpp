@@ -58,7 +58,7 @@ std::unique_ptr<Krell::IDisplay> getDisplay(const options_t& options)
         return nullptr;
     }
     if ((options & OPTS::GRAPHICAL) != 0) {
-        return std::make_unique<SFMLDisplay>();
+        return std::make_unique<Krell::SFMLDisplay>();
     }
     return std::make_unique<Krell::NCursesDisplay>();
 }
