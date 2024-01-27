@@ -10,6 +10,7 @@
 
 #include "Args.hpp"
 #include "Orchestrator.hpp"
+#include "modules/HostnameModule.hpp"
 #include "modules/MemoryModule.hpp"
 
 void displayHelp() {
@@ -33,6 +34,8 @@ void displayHelp() {
 
     orchestrator.addModule("memory",
                            std::make_unique<Krell::MemoryModule>());
+    orchestrator.addModule("hostname",
+                           std::make_unique<Krell::HostnameModule>());
 
     while (true) {
         std::this_thread::sleep_for(interval);
