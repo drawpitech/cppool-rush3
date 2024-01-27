@@ -9,13 +9,13 @@
 #include <memory>
 #include <thread>
 
-#include "NcursesDisplay.hpp"
-#include "modules/ProcessorModule.hpp"
 #include "Args.hpp"
+#include "NcursesDisplay.hpp"
 #include "Orchestrator.hpp"
 #include "modules/HostnameModule.hpp"
 #include "modules/MemoryModule.hpp"
 #include "modules/OSModule.hpp"
+#include "modules/ProcessorModule.hpp"
 #include "modules/TimeModule.hpp"
 
 void displayHelp()
@@ -44,6 +44,14 @@ void addModules(Krell::Orchestrator& orc)
     orc.addModule(std::make_unique<Krell::TimeModule>());
 }
 
+std::unique_ptr<Krell::IDisplay> getDisplay(const options_t& options)
+{
+    std::clog << "Options: " << options << std::endl;
+    if ((options & OPTS::DEBUG_MOD) != 0)
+        return nullptr;
+    return std::make_unique<Krell::NcursesDisplay>();
+}
+
 [[noreturn]] int main(const int argc, const char* argv[])
 {
     const options_t options = get_params(argc, argv);
@@ -58,16 +66,17 @@ void addModules(Krell::Orchestrator& orc)
 
     addModules(orchestrator);
 
-    Krell::NcursesDisplay display;
+    std::unique_ptr<Krell::IDisplay> display = getDisplay(options);
 
     while (true) {
         orchestrator.update();
         if ((options & OPTS::DEBUG_MOD) != 0)
             orchestrator.log();
 
-        display.update(orchestrator.getData());
-
-        display.render();
+        if (display != nullptr) {
+            display->update(orchestrator.getData());
+            display->render();
+        }
 
         std::this_thread::sleep_for(interval);
     }
