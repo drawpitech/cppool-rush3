@@ -6,13 +6,17 @@
 */
 
 #include "modules/OSModule.hpp"
+#include "Utils.hpp"
 
-#include <algorithm>
-#include <vector>
+#include <unordered_map>
 
 namespace {
-inline const std::vector RELEVANT_KEYS{"NAME", "VERSION", "kernel"};
-} // namespace
+inline const std::unordered_map<std::string, std::string> RELEVANT_KEYS{
+    {"NAME", "Name"},
+    {"VERSION", "Version"},
+    {"kernel", "Kernel"},
+};
+}  // namespace
 
 namespace Krell {
 OSModule::OSModule(const std::string& file) : AModule{file} {}
@@ -30,17 +34,12 @@ void OSModule::update()
             continue;
 
         std::string key = line.substr(0, index);
-        if (std::find(RELEVANT_KEYS.begin(), RELEVANT_KEYS.end(), key) ==
-            RELEVANT_KEYS.end())
-            continue;
-
         std::string value = line.substr(index + 1);
         if (value.back() == '"')
             value.pop_back();
         if (value.front() == '"')
             value.erase(0, 1);
-
-        (*_data)[key] = std::make_unique<StringData>(value);
+        Utils::add_to_data(*_data, RELEVANT_KEYS, key, value);
     }
 
     // Kernel
@@ -49,8 +48,8 @@ void OSModule::update()
     while (std::getline(_stream, line)) {
         if (line.empty())
             continue;
-        std::string kernel = line.substr(0, line.find('('));
-        (*_data)["kernel"] = std::make_unique<StringData>(kernel);
+        std::string value = line.substr(0, line.find('('));
+        Utils::add_to_data(*_data, RELEVANT_KEYS, "kernel", value);
     }
 }
 

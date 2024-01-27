@@ -5,11 +5,11 @@
 ** Utils.cpp
 */
 
-#include <string>
-
 #include "Utils.hpp"
 
-#include <iostream>
+#include <string>
+
+#include "Data.hpp"
 
 namespace Krell::Utils {
 std::string ltrim(const std::string& s, const char* t)
@@ -33,4 +33,14 @@ std::string trim(const std::string& s, const char* t)
     str = rtrim(str);
     return str;
 }
+
+void add_to_data(
+    Krell::ModuleTab& map,
+    std::unordered_map<std::string, std::string> relevant_keys,
+    const std::string& key, const std::string& value)
+{
+    if (relevant_keys.find(key) == relevant_keys.end())
+        return;
+    map[relevant_keys.at(key)] = std::make_unique<Krell::StringData>(value);
 }
+}  // namespace Krell::Utils

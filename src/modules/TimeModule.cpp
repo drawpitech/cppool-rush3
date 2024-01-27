@@ -9,6 +9,17 @@
 
 #include <pwd.h>
 
+#include <unordered_map>
+
+#include "Utils.hpp"
+
+namespace {
+inline const std::unordered_map<std::string, std::string> RELEVANT_KEYS{
+    {"date", "Date"},
+    {"time", "Time"},
+};
+}  // namespace
+
 namespace Krell {
 TimeModule::TimeModule(const std::string& file) : AModule{file} {}
 
@@ -22,12 +33,11 @@ void TimeModule::update()
     if (str_date.empty() || index == std::string::npos)
         return;
 
-    std::string date = str_date.substr(0, index - 3) + " " +
-                       std::to_string(tm->tm_year + 1900);
+    std::string date = str_date.substr(0, index - 3) + " " + std::to_string(tm->tm_year + 1900);
     std::string time = str_date.substr(index - 2, 8);
 
-    (*_data)["date"] = std::make_unique<StringData>(date);
-    (*_data)["time"] = std::make_unique<StringData>(time);
+    Utils::add_to_data(*_data, RELEVANT_KEYS, "date", date);
+    Utils::add_to_data(*_data, RELEVANT_KEYS, "time", time);
 }
 
 std::shared_ptr<ModuleTab> TimeModule::getData() const

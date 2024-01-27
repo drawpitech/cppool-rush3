@@ -5,17 +5,25 @@
 ** HostnameModule.cpp
 */
 
-#include <string>
-#include <pwd.h>
-
-#include "AModule.hpp"
 #include "modules/HostnameModule.hpp"
 
+#include <pwd.h>
+
+#include <string>
+#include <unordered_map>
+
+#include "AModule.hpp"
+#include "Utils.hpp"
+
+namespace {
+inline const std::unordered_map<std::string, std::string> RELEVANT_KEYS{
+    {"hostname", "Hostname"},
+    {"username", "Username"},
+};
+}  // namespace
+
 namespace Krell {
-HostnameModule::HostnameModule(const std::string& file)
-    : AModule{file}
-{
-}
+HostnameModule::HostnameModule(const std::string& file) : AModule{file} {}
 
 void HostnameModule::update()
 {
@@ -24,18 +32,15 @@ void HostnameModule::update()
     // Hostname
     _path = "/proc/sys/kernel/hostname";
     AModule::update();
-    while (std::getline(_stream, line)) {
-        if (line.empty())
-            continue;
-        (*_data)["hostname"] = std::make_unique<StringData>(line);
-    }
+    while (std::getline(_stream, line))
+        if (!line.empty())
+            Utils::add_to_data(*_data, RELEVANT_KEYS, "hostname", line);
 
     // Username
     uid_t uid = geteuid();
     struct passwd* pw = getpwuid(uid);
     if (pw != nullptr)
-        (*_data)["username"] = std::make_unique<StringData>(
-            std::string(pw->pw_name));
+        Utils::add_to_data(*_data, RELEVANT_KEYS, "username", pw->pw_name);
 }
 
 std::shared_ptr<ModuleTab> HostnameModule::getData() const
@@ -48,11 +53,7 @@ std::string const& HostnameModule::getName() const
     return _name;
 }
 
-void HostnameModule::subscribe(std::string const& name)
-{
-}
+void HostnameModule::subscribe(std::string const& name) {}
 
-void HostnameModule::unsubscribe(std::string const& name)
-{
-}
-} // namespace Krell
+void HostnameModule::unsubscribe(std::string const& name) {}
+}  // namespace Krell
