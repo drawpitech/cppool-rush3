@@ -48,7 +48,7 @@ void OSModule::update()
     while (std::getline(_stream, line)) {
         if (line.empty())
             continue;
-        std::string value = line.substr(0, line.find('('));
+        std::string value = line.substr(0, line.find('(') - 1);
         Utils::add_to_data(*_data, RELEVANT_KEYS, "kernel", value);
     }
 }
