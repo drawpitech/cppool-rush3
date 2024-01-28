@@ -6,13 +6,14 @@
 */
 
 #include "NCursesDisplay.hpp"
-#include "data/GraphData.hpp"
 
 #include <ncurses.h>
 
 #include <algorithm>
 #include <array>
 #include <memory>
+
+#include "data/GraphData.hpp"
 
 namespace {
 std::string getSelection(
@@ -40,7 +41,7 @@ size_t count_exists(
             count += 1;
     return count;
 }
-} // namespace
+}  // namespace
 
 #include "Orchestrator.hpp"
 
@@ -68,9 +69,8 @@ bool NCursesDisplay::isRunning() const
 
 void NCursesDisplay::handleInput()
 {
-    size_t count = (_menuOpen)
-                       ? _windows.size() - count_exists(_windows)
-                       : count_exists(_windows);
+    size_t count = (_menuOpen) ? _windows.size() - count_exists(_windows)
+                               : count_exists(_windows);
     std::string selection;
 
     switch (getch()) {
@@ -133,9 +133,12 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
         if (!win.exists)
             continue;
         const bool is_selected = i == _selected;
-        const int height = (win.folded)
-                               ? 2
-                               : static_cast<int>(module->size()) * 2 + 2;
+
+        size_t height = 2;
+        if (!win.folded) {
+            for (const auto& [key, value] : *module)
+                height += 1 + int(value->type() == Data::Graph);
+        }
 
         if (win.win != nullptr)
             delwin(win.win);
@@ -163,19 +166,20 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
                     "%s", value->str().c_str());
                 wcolor_set(win.win, 0, nullptr);
                 if (value->type() == Data::Graph) {
-                    Data::GraphData<std::size_t>* graph = reinterpret_cast
-                    <
-                        Data::GraphData<std::size_t>*>(value.get());
+                    Data::GraphData<std::size_t>* graph =
+                        reinterpret_cast<Data::GraphData<std::size_t>*>(
+                            value.get());
                     int g_off = COLS - 4;
                     graph->size(COLS - 6);
                     for (const auto& val : graph->data()) {
                         wcolor_set(win.win, 4, nullptr);
-                        const int val_h = (float)(val - graph->minCurrent()) /
-                                          (graph->maxCurrent() - graph->minCurrent()) * 4;
+                        const int val_h =
+                            (float)(val - graph->minCurrent()) /
+                            (graph->maxCurrent() - graph->minCurrent()) * 4;
                         switch (val_h) {
                             case 0:
                                 mvwaddch(win.win, y_loff, g_off--, '_');
-                            break;
+                                break;
                             case 1:
                                 mvwaddch(win.win, y_loff, g_off--, ACS_S9);
                                 break;
@@ -191,8 +195,8 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
                         }
                         wcolor_set(win.win, 0, nullptr);
                     }
+                    y_loff++;
                 }
-                y_loff++;
             }
         }
         i++;
@@ -206,7 +210,7 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
         _menu = subwin(stdscr, count + 3 + int(count != 0), COLS - 6, 3, 3);
         wclear(_menu);
         box(_menu, 0, 0);
-        mvwprintw(_menu, 1, 1, "  Press 'ENTER' on a module");
+        mvwprintw(_menu, 1, 1, "  Press 'SPACE' on a module");
         int offset = 0;
         for (const auto& [name, module] : _windows) {
             if (module.exists)
@@ -233,6 +237,9 @@ NCursesDisplay::~NCursesDisplay()
 {
     for (const auto& [_, module] : _windows)
         delwin(module.win);
+    if (_menu != nullptr)
+        delwin(_menu);
+    delwin(stdscr);
     endwin();
 }
-} // namespace Krellqq
+}  // namespace Krell
