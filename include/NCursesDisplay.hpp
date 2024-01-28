@@ -32,6 +32,7 @@ class NCursesDisplay final : public IDisplay
     {
         WINDOW* win;
         bool folded;
+        bool exists;
     };
 
    private:

@@ -11,7 +11,23 @@
 
 #include <algorithm>
 #include <memory>
-#include <vector>
+
+namespace {
+std::string getSelection(
+    size_t selected,
+    const std::map<std::string, Krell::NCursesDisplay::Window>& windows)
+{
+    size_t i = 0;
+    for (const auto& [name, module] : windows) {
+        if (!module.exists)
+            continue;
+        if (i == selected)
+            return name;
+        i++;
+    }
+    return "";
+}
+}  // namespace
 
 #include "Orchestrator.hpp"
 
@@ -38,28 +54,41 @@ bool NCursesDisplay::isRunning() const
 
 void NCursesDisplay::handleInput()
 {
-    std::vector<std::string> win_names;
-    win_names.reserve(_windows.size());
-    for (const auto& [name, _] : _windows)
-        win_names.push_back(name);
+    size_t count = 0;
+    for (const auto& [_, module] : _windows)
+        if (module.exists)
+            count += 1;
+    if (count != 0)
+        count -= 1;
+    std::string selection;
 
     switch (getch()) {
         case 'q':
             _running = false;
             break;
         case ' ':
-            _windows[win_names[_selected]].folded =
-                !_windows[win_names[_selected]].folded;
+            selection = getSelection(_selected, _windows);
+            if (!selection.empty())
+                _windows[selection].folded = !_windows[selection].folded;
+            break;
+        case 'd':
+            selection = getSelection(_selected, _windows);
+            if (selection.empty())
+                break;
+            _windows[selection].exists = false;
+            if (_selected >= count)
+                _selected = count - 1;
             break;
         case KEY_UP:
-            _selected = _selected == 0 ? win_names.size() - 1 : _selected - 1;
+            _selected = (_selected == 0) ? _selected : _selected - 1;
             break;
         case KEY_DOWN:
-            _selected = _selected >= win_names.size() - 1 ? 0 : _selected + 1;
+            _selected = (_selected >= count) ? count : _selected + 1;
             break;
         default:
             break;
     }
+    std::clamp(_selected, size_t(0), count);
 }
 
 void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
@@ -69,25 +98,20 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
     int y_off = 0;
     size_t i = 0;
 
+    clear();
     for (const auto& [name, module] : *data) {
         if (!_windows.contains(name))
-            _windows[name] = {nullptr, false};
+            _windows[name] = {nullptr, false, true};
 
         Window& win = _windows[name];
+        if (!win.exists)
+            continue;
         const bool is_selected = i == _selected;
         const int height = (win.folded) ? 2 : (int)module->size() + 2;
 
-        if (win.win == nullptr) {
-            win.win = subwin(stdscr, height, COLS, y_off, 0);
-        } else {
-            wclear(win.win);
-            if (getbegy(win.win) != y_off) {
-                delwin(win.win);
-                win.win = subwin(stdscr, height, COLS, y_off, 0);
-            }
-            if (getmaxy(win.win) != height)
-                wresize(win.win, height, COLS);
-        }
+        if (win.win != nullptr)
+            delwin(win.win);
+        win.win = subwin(stdscr, height, COLS, y_off, 0);
 
         y_off += height;
         int y_loff = 0;
