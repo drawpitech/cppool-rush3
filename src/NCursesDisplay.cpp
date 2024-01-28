@@ -162,10 +162,11 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
                     "%s", value->str().c_str());
                 wcolor_set(win.win, 0, nullptr);
                 if (value->type() == Data::Graph) {
-                    const Data::GraphData<std::size_t>* graph = reinterpret_cast
+                    Data::GraphData<std::size_t>* graph = reinterpret_cast
                     <
                         Data::GraphData<std::size_t>*>(value.get());
-                    int g_off = COLS - 3;
+                    int g_off = COLS - 4;
+                    graph->size(COLS - 6);
                     for (const auto& val : graph->data()) {
                         const int val_h = (float)(val - graph->min()) /
                                           (graph->max() - graph->min()) * 4;
