@@ -76,7 +76,7 @@ int main(const int argc, const char* argv[])
     }
 
     addModules(orchestrator);
-    std::unique_ptr<Krell::IDisplay> display = getDisplay(options);
+    const std::unique_ptr<Krell::IDisplay> display = getDisplay(options);
 
     while (display == nullptr || display->isRunning()) {
         orchestrator.update();

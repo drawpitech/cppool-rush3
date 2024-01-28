@@ -6,10 +6,12 @@
 */
 
 #include "NCursesDisplay.hpp"
+#include "data/GraphData.hpp"
 
 #include <ncurses.h>
 
 #include <algorithm>
+#include <array>
 #include <memory>
 
 namespace {
@@ -38,7 +40,7 @@ size_t count_exists(
             count += 1;
     return count;
 }
-}  // namespace
+} // namespace
 
 #include "Orchestrator.hpp"
 
@@ -65,8 +67,9 @@ bool NCursesDisplay::isRunning() const
 
 void NCursesDisplay::handleInput()
 {
-    size_t count = (_menuOpen) ? _windows.size() - count_exists(_windows)
-                               : count_exists(_windows);
+    size_t count = (_menuOpen)
+                       ? _windows.size() - count_exists(_windows)
+                       : count_exists(_windows);
     std::string selection;
 
     switch (getch()) {
@@ -129,7 +132,9 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
         if (!win.exists)
             continue;
         const bool is_selected = i == _selected;
-        const int height = (win.folded) ? 2 : (int)module->size() + 2;
+        const int height = (win.folded)
+                               ? 2
+                               : static_cast<int>(module->size()) * 2 + 2;
 
         if (win.win != nullptr)
             delwin(win.win);
@@ -156,6 +161,31 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
                     win.win, y_loff++, (int)(COLS - 3 - value->str().size()),
                     "%s", value->str().c_str());
                 wcolor_set(win.win, 0, nullptr);
+                if (value->type() == Data::Graph) {
+                    const Data::GraphData<std::size_t>* graph = reinterpret_cast
+                    <
+                        Data::GraphData<std::size_t>*>(value.get());
+                    int g_off = COLS - 3;
+                    for (const auto& val : graph->data()) {
+                        const int val_h = (float)(val - graph->min()) /
+                                          (graph->max() - graph->min()) * 3;
+                        switch (val_h) {
+                            case 0:
+                                mvwaddch(win.win, y_loff, g_off--, ACS_S9);
+                                break;
+                            case 1:
+                                mvwaddch(win.win, y_loff, g_off--, ACS_S7);
+                                break;
+                            case 2:
+                                mvwaddch(win.win, y_loff, g_off--, ACS_S3);
+                                break;
+                            case 3:
+                                mvwaddch(win.win, y_loff, g_off--, ACS_S1);
+                                break;
+                        }
+                    }
+                }
+                y_loff++;
             }
         }
         i++;
@@ -198,4 +228,4 @@ NCursesDisplay::~NCursesDisplay()
         delwin(module.win);
     endwin();
 }
-}  // namespace Krell
+} // namespace Krellqq

@@ -8,19 +8,22 @@
 #pragma once
 
 #include <cstddef>
-#include <queue>
+#include <deque>
+#include <optional>
 #include <type_traits>
 
 namespace Krell::Data {
-template <typename T, std::size_t _size> requires std::is_arithmetic_v<T>
+template <typename T> requires std::is_arithmetic_v<T>
 class GraphData final : public IData
 {
 public:
     explicit GraphData(
-        std::optional<std::string> unit = std::nullopt,
+        std::size_t size,
+        std::string unit,
         std::optional<T> max = std::nullopt,
         std::optional<T> min = 0)
-        : _unit(std::move(unit)), _max{max ? *max : 0}, _min{min ? *min : 0}
+        : _unit(std::move(unit)), _size(size), _max{max ? *max : 0},
+          _min{min ? *min : 0}
     {
     }
 
@@ -29,21 +32,57 @@ public:
         _max = std::max(_max, value);
         _min = std::min(_min, value);
         if (_data.size() >= _size) {
-            _data.pop();
+            _data.pop_back();
         }
-        _data.push(value);
+        _data.emplace_front(value);
     }
 
     std::string str() const override
     {
-        return _data.back() + (_unit ? " " + *_unit : "");
+        return std::to_string(_data.front()) + (
+                   _unit.empty() ? "" : " " + _unit);
+    }
+
+    const std::deque<T>& data() const
+    {
+        return _data;
+    }
+
+    std::size_t size() const
+    {
+        return _size;
+    }
+
+    void size(const std::size_t size)
+    {
+        _size = size;
+        while (_data.size() > _size) {
+            _data.pop_back();
+        }
+    }
+
+    T max() const
+    {
+        return _max;
+    }
+
+    T min() const
+    {
+        return _min;
+    }
+
+    constexpr DataClass type() const override
+    {
+        return Graph;
     }
 
 private:
-    std::optional<std::string> _unit{};
+    std::string _unit{};
+
+    std::size_t _size;
 
     T _max{0};
     T _min{0};
-    std::queue<T> _data;
+    std::deque<T> _data;
 };
 }

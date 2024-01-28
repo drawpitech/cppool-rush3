@@ -66,11 +66,11 @@ void ProcessorModule::update()
         }
         if (key == "cpu MHz") {
             (*_data)[relevantKeys.at(key) + ' ' + coreName] = std::make_unique<
-                StringData>(value);
+                Data::StringData>(value);
             continue;
         }
         if (relevantKeys.contains(key)){
-            (*_data)[relevantKeys.at(key)] = std::make_unique<StringData>(value);
+            (*_data)[relevantKeys.at(key)] = std::make_unique<Data::StringData>(value);
         }
     }
 }

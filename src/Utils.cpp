@@ -7,6 +7,7 @@
 
 #include "Utils.hpp"
 
+#include <memory>
 #include <string>
 
 #include "Data.hpp"
@@ -41,6 +42,6 @@ void add_to_data(
 {
     if (relevant_keys.find(key) == relevant_keys.end())
         return;
-    map[relevant_keys.at(key)] = std::make_unique<Krell::StringData>(value);
+    map[relevant_keys.at(key)] = std::make_unique<Data::StringData>(value);
 }
 }  // namespace Krell::Utils

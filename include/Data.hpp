@@ -6,18 +6,27 @@
 */
 
 #pragma once
+
 #include <map>
 #include <memory>
-#include <optional>
 #include <string>
 
-namespace Krell {
+namespace Krell::Data {
+enum DataClass
+{
+    String,
+    Number,
+    Graph
+};
+
 class IData
 {
 public:
     virtual ~IData() = default;
 
     virtual std::string str() const = 0;
+
+    virtual DataClass type() const = 0;
 
 private:
 };
@@ -29,23 +38,14 @@ public:
 
     std::string str() const override;
 
+    constexpr DataClass type() const override;
+
 private:
     std::string _data;
 };
-
-class NumberData final : public IData
-{
-public:
-    explicit NumberData(std::string unit, bool isSi = false);
-
-    std::string str() const override;
-
-private:
-    std::string _unit;
-    bool _isSi;
-};
+}
 
 
-
-using ModuleTab = std::map<std::string, std::unique_ptr<IData> >;
+namespace Krell {
+using ModuleTab = std::map<std::string, std::unique_ptr<Data::IData> >;
 }

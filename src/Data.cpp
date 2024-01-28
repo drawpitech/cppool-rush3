@@ -7,12 +7,19 @@
 
 #include "Data.hpp"
 
-namespace Krell {
+namespace Krell::Data {
 StringData::StringData(std::string str)
-    : _data{std::move(str)} {
+    : _data{std::move(str)}
+{
 }
 
-std::string StringData::str() const {
+std::string StringData::str() const
+{
     return _data;
+}
+
+constexpr DataClass StringData::type() const
+{
+    return String;
 }
 }
