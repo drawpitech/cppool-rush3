@@ -41,6 +41,9 @@ class NCursesDisplay final : public IDisplay
     bool _running{true};
     size_t _selected{0};
 
+    bool _menuOpen{false};
+    WINDOW* _menu{nullptr};
+
     void handleInput();
 };
 }  // namespace Krell

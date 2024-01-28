@@ -15,17 +15,28 @@
 namespace {
 std::string getSelection(
     size_t selected,
-    const std::map<std::string, Krell::NCursesDisplay::Window>& windows)
+    const std::map<std::string, Krell::NCursesDisplay::Window>& windows,
+    bool exists = true)
 {
     size_t i = 0;
     for (const auto& [name, module] : windows) {
-        if (!module.exists)
+        if (exists != module.exists)
             continue;
         if (i == selected)
             return name;
         i++;
     }
     return "";
+}
+
+size_t count_exists(
+    const std::map<std::string, Krell::NCursesDisplay::Window>& windows)
+{
+    size_t count = 0;
+    for (const auto& [_, module] : windows)
+        if (module.exists)
+            count += 1;
+    return count;
 }
 }  // namespace
 
@@ -54,37 +65,48 @@ bool NCursesDisplay::isRunning() const
 
 void NCursesDisplay::handleInput()
 {
-    size_t count = 0;
-    for (const auto& [_, module] : _windows)
-        if (module.exists)
-            count += 1;
-    if (count != 0)
-        count -= 1;
+    size_t count = (_menuOpen) ? _windows.size() - count_exists(_windows)
+                               : count_exists(_windows);
     std::string selection;
 
     switch (getch()) {
         case 'q':
             _running = false;
             break;
+
         case ' ':
-            selection = getSelection(_selected, _windows);
-            if (!selection.empty())
+            selection = getSelection(_selected, _windows, !_menuOpen);
+            if (selection.empty())
+                break;
+            if (_menuOpen) {
+                _windows[selection].exists = true;
+                count -= 1;
+            } else {
                 _windows[selection].folded = !_windows[selection].folded;
+            }
             break;
+
         case 'd':
             selection = getSelection(_selected, _windows);
             if (selection.empty())
                 break;
             _windows[selection].exists = false;
-            if (_selected >= count)
-                _selected = count - 1;
+            count -= 1;
             break;
+
         case KEY_UP:
             _selected = (_selected == 0) ? _selected : _selected - 1;
             break;
+
         case KEY_DOWN:
             _selected = (_selected >= count) ? count : _selected + 1;
             break;
+
+        case 'a':
+            _menuOpen = !_menuOpen;
+            _selected = 0;
+            break;
+
         default:
             break;
     }
@@ -116,7 +138,7 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
         y_off += height;
         int y_loff = 0;
 
-        wcolor_set(win.win, (is_selected) ? 2 : 1, nullptr);
+        wcolor_set(win.win, (!_menuOpen && is_selected) ? 2 : 1, nullptr);
         box(win.win, 0, 0);
         mvwaddch(win.win, y_loff, 2, ACS_URCORNER);
         mvwaddch(win.win, y_loff, 5 + name.size(), ACS_ULCORNER);
@@ -137,6 +159,29 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
             }
         }
         i++;
+    }
+
+    if (_menuOpen) {
+        size_t count = _windows.size() - count_exists(_windows);
+
+        if (_menu != nullptr)
+            delwin(_menu);
+        _menu = subwin(stdscr, count + 3 + int(count != 0), COLS - 6, 3, 3);
+        wclear(_menu);
+        box(_menu, 0, 0);
+        mvwprintw(_menu, 1, 1, "  Press 'ENTER' on a module");
+        int offset = 0;
+        for (const auto& [name, module] : _windows) {
+            if (module.exists)
+                continue;
+            const bool is_selected = size_t(offset) == _selected;
+
+            if (is_selected)
+                wcolor_set(_menu, 2, nullptr);
+            mvwprintw(_menu, offset++ + 3, 1, "  %s", name.c_str());
+            if (is_selected)
+                wcolor_set(_menu, 0, nullptr);
+        }
     }
 }
 
