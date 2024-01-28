@@ -58,7 +58,7 @@ void MemoryModule::update()
                     case Data::Graph:
                         (*_data)[name] = std::make_unique<Data::GraphData<
                             std::size_t> >(
-                            60, unit);
+                            60, unit, std::nullopt, std::nullopt);
                         break;
                     case Data::Number:
                         std::cout << unit << std::endl;

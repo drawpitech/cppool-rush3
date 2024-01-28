@@ -168,18 +168,21 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
                     int g_off = COLS - 3;
                     for (const auto& val : graph->data()) {
                         const int val_h = (float)(val - graph->min()) /
-                                          (graph->max() - graph->min()) * 3;
+                                          (graph->max() - graph->min()) * 4;
                         switch (val_h) {
                             case 0:
+                                mvwaddch(win.win, y_loff, g_off--, '_');
+                            break;
+                            case 1:
                                 mvwaddch(win.win, y_loff, g_off--, ACS_S9);
                                 break;
-                            case 1:
+                            case 2:
                                 mvwaddch(win.win, y_loff, g_off--, ACS_S7);
                                 break;
-                            case 2:
+                            case 3:
                                 mvwaddch(win.win, y_loff, g_off--, ACS_S3);
                                 break;
-                            case 3:
+                            case 4:
                                 mvwaddch(win.win, y_loff, g_off--, ACS_S1);
                                 break;
                         }

@@ -29,6 +29,12 @@ public:
 
     void push(T value)
     {
+        if (!_max) {
+            _max = value;
+        }
+        if (!_min) {
+            _min = value;
+        }
         _max = std::max(_max, value);
         _min = std::min(_min, value);
         if (_data.size() >= _size) {
