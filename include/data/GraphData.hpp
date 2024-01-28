@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstddef>
+#include <algorithm>
 #include <deque>
 #include <optional>
 #include <type_traits>
@@ -72,9 +73,27 @@ public:
         return _max;
     }
 
+    T maxCurrent() const
+    {
+        T max = _data.front();
+        for (const auto& val : _data) {
+            max = std::max(max, val);
+        }
+        return max;
+    }
+
     T min() const
     {
         return _min;
+    }
+
+    T minCurrent() const
+    {
+        T min = _data.front();
+        for (const auto& val : _data) {
+            min = std::min(min, val);
+        }
+        return min;
     }
 
     constexpr DataClass type() const override

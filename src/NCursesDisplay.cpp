@@ -56,6 +56,7 @@ NCursesDisplay::NCursesDisplay()
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     init_pair(2, COLOR_RED, COLOR_BLACK);
     init_pair(3, COLOR_BLUE, COLOR_BLACK);
+    init_pair(4, COLOR_YELLOW, COLOR_BLACK);
     nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
 }
@@ -168,8 +169,9 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
                     int g_off = COLS - 4;
                     graph->size(COLS - 6);
                     for (const auto& val : graph->data()) {
-                        const int val_h = (float)(val - graph->min()) /
-                                          (graph->max() - graph->min()) * 4;
+                        wcolor_set(win.win, 4, nullptr);
+                        const int val_h = (float)(val - graph->minCurrent()) /
+                                          (graph->maxCurrent() - graph->minCurrent()) * 4;
                         switch (val_h) {
                             case 0:
                                 mvwaddch(win.win, y_loff, g_off--, '_');
@@ -187,6 +189,7 @@ void NCursesDisplay::update(std::shared_ptr<OrchTable> data)
                                 mvwaddch(win.win, y_loff, g_off--, ACS_S1);
                                 break;
                         }
+                        wcolor_set(win.win, 0, nullptr);
                     }
                 }
                 y_loff++;
